@@ -54,7 +54,8 @@
       visible:data.visible!==false && String(data.visible)!=='false' && String(data.visible)!=='0',
       overlayConfigured:overlayConfigured,
       overlayColor:validHex(rawOverlayColor)?rawOverlayColor.toLowerCase():'#051c2c',
-      overlayOpacity:rawOverlayOpacity===''?72:clamp(rawOverlayOpacity,0,100)
+      overlayOpacity:rawOverlayOpacity===''?72:clamp(rawOverlayOpacity,0,100),
+      overlayMode:['left','right','uniform'].indexOf(String(data.overlayMode||'').toLowerCase())>=0?String(data.overlayMode).toLowerCase():'uniform'
     };
   }
 
@@ -78,23 +79,36 @@
     var h=validHex(hex)?String(hex).slice(1):'051c2c';
     return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];
   }
-  function overlayRgba(cfg){
-    var rgb=rgbFromHex(cfg.overlayColor), a=clamp(cfg.overlayOpacity,0,100)/100;
+  function overlayRgba(cfg,alphaScale){
+    var rgb=rgbFromHex(cfg.overlayColor), a=(clamp(cfg.overlayOpacity,0,100)/100)*(alphaScale==null?1:Number(alphaScale));
+    a=clamp(a,0,1);
     return 'rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+','+a.toFixed(3)+')';
   }
-  function setOverlayManaged(on, rgba){
+  function overlayFill(cfg){
+    var mode=['left','right','uniform'].indexOf(String(cfg.overlayMode||'').toLowerCase())>=0?String(cfg.overlayMode).toLowerCase():'uniform';
+    var full=overlayRgba(cfg,1), mid=overlayRgba(cfg,.68), light=overlayRgba(cfg,.18), clear=overlayRgba(cfg,0);
+    if(mode==='left') return 'linear-gradient(90deg,'+full+' 0%,'+mid+' 42%,'+light+' 76%,'+clear+' 100%)';
+    if(mode==='right') return 'linear-gradient(90deg,'+clear+' 0%,'+light+' 24%,'+mid+' 58%,'+full+' 100%)';
+    return 'linear-gradient(90deg,'+full+' 0%,'+full+' 100%)';
+  }
+  function setOverlayManaged(on, rgba, fill){
     var h=hero(), o=overlay();
     [h,o].forEach(function(el){
       if(!el)return;
       el.classList.toggle('lp-hero-overlay-managed',!!on);
-      if(on) el.style.setProperty('--lp-hero-overlay-rgba',rgba||'rgba(0,0,0,0)');
-      else el.style.removeProperty('--lp-hero-overlay-rgba');
+      if(on){
+        el.style.setProperty('--lp-hero-overlay-rgba',rgba||'rgba(0,0,0,0)');
+        el.style.setProperty('--lp-hero-overlay-fill',fill||'linear-gradient(transparent,transparent)');
+      } else {
+        el.style.removeProperty('--lp-hero-overlay-rgba');
+        el.style.removeProperty('--lp-hero-overlay-fill');
+      }
     });
   }
   function clearOverlayCustom(){
     var o=overlay(); if(!o)return;
     var url=rememberHeroImageUrl();
-    setOverlayManaged(false,'');
+    setOverlayManaged(false,'','');
     remove(o,'filter');
     if(url) setImportant(o,'background-image',defaultHeroBackground(url));
     else remove(o,'background-image');
@@ -107,7 +121,7 @@
     if(!visible){
       // Hide only the configurable tint. Template5 keeps its own decorative
       // diagonal layers / LEARNING artwork and original image treatment.
-      setOverlayManaged(true,'rgba(0,0,0,0)');
+      setOverlayManaged(true,'rgba(0,0,0,0)','linear-gradient(transparent,transparent)');
       if(url) setImportant(o,'background-image','url("'+escapedUrl(url)+'")');
       else setImportant(o,'background-image','none');
       if(n===5) remove(o,'filter');
@@ -116,17 +130,17 @@
     }
     remove(o,'filter');
     if(!cfg.overlayConfigured){
-      setOverlayManaged(false,'');
+      setOverlayManaged(false,'','');
       if(url) setImportant(o,'background-image',defaultHeroBackground(url));
       return;
     }
-    var rgba=overlayRgba(cfg);
-    setOverlayManaged(true,rgba);
+    var rgba=overlayRgba(cfg), fill=overlayFill(cfg);
+    setOverlayManaged(true,rgba,fill);
     if(url){
-      if(n===1 || n===9) setImportant(o,'background-image','linear-gradient('+rgba+','+rgba+'),url("'+escapedUrl(url)+'")');
+      if(n===1 || n===9) setImportant(o,'background-image',fill+',url("'+escapedUrl(url)+'")');
       else setImportant(o,'background-image','url("'+escapedUrl(url)+'")');
     } else if(n===1 || n===9){
-      setImportant(o,'background-image','linear-gradient('+rgba+','+rgba+')');
+      setImportant(o,'background-image',fill);
     }
   }
   function setupOverlayWatcher(){
@@ -143,7 +157,7 @@
 
   function clearCustom(){
     var b=box(), els=[title(),kicker(),desc()];
-    ['position','left','top','width','max-width','margin','transform','box-sizing','display'].forEach(function(p){remove(b,p);});
+    ['position','left','top','width','max-width','min-height','height','margin','transform','box-sizing','display'].forEach(function(p){remove(b,p);});
     els.forEach(function(el){['font-size','text-align','color','width','max-width','font-weight','font-style','justify-content'].forEach(function(p){remove(el,p);});});
     clearOverlayCustom();
   }
@@ -151,7 +165,7 @@
     var cfg=normalizeConfig(data), h=hero(), b=box(); if(!h||!b)return;
     if(!cfg.configured){ clearCustom(); return; }
     imp(b,'position','absolute'); imp(b,'left',cfg.xPct+'%'); imp(b,'top',cfg.yPct+'%'); imp(b,'width',cfg.widthPct+'%');
-    imp(b,'max-width','none'); imp(b,'margin','0'); imp(b,'transform','none'); imp(b,'box-sizing','border-box');
+    imp(b,'max-width','none'); imp(b,'min-height','0'); imp(b,'height','auto'); imp(b,'margin','0'); imp(b,'transform','none'); imp(b,'box-sizing','border-box');
     if(cfg.visible) remove(b,'display'); else imp(b,'display','none');
     [[title(),cfg.titleSize,cfg.titleColor],[kicker(),cfg.kickerSize,cfg.kickerColor],[desc(),cfg.descriptionSize,cfg.descriptionColor]].forEach(function(a){
       var el=a[0]; if(!el)return; imp(el,'font-size',a[1]+'px'); imp(el,'text-align',cfg.align); imp(el,'color',a[2]); imp(el,'width','100%'); imp(el,'max-width','none');
@@ -163,7 +177,7 @@
     applyOverlay(cfg);
   }
   function captureCurrent(){
-    var h=hero(), b=box(); if(!h||!b)return normalizeConfig({configured:true,template:activeTemplate,xPct:5,yPct:20,widthPct:55,titleSize:56,kickerSize:12,descriptionSize:16,align:'left',titleColor:'#ffffff',kickerColor:'#ffffff',descriptionColor:'#ffffff',titleWeight:'normal',titleStyle:'normal',visible:true,overlayConfigured:false});
+    var h=hero(), b=box(); if(!h||!b)return normalizeConfig({configured:true,template:activeTemplate,xPct:5,yPct:20,widthPct:55,titleSize:56,kickerSize:12,descriptionSize:16,align:'left',titleColor:'#ffffff',kickerColor:'#ffffff',descriptionColor:'#ffffff',titleWeight:'normal',titleStyle:'normal',visible:true,overlayConfigured:false,overlayMode:'uniform'});
     var hr=h.getBoundingClientRect(), br=b.getBoundingClientRect();
     var ts=title()?parseFloat(getComputedStyle(title()).fontSize):56;
     var ks=kicker()?parseFloat(getComputedStyle(kicker()).fontSize):12;
@@ -176,7 +190,7 @@
       xPct:hr.width?((br.left-hr.left)/hr.width*100):5, yPct:hr.height?((br.top-hr.top)/hr.height*100):20,
       widthPct:hr.width?(br.width/hr.width*100):55, titleSize:ts,kickerSize:ks,descriptionSize:ds,align:align,
       titleColor:title()?getComputedStyle(title()).color:'#ffffff',kickerColor:kicker()?getComputedStyle(kicker()).color:'#ffffff',descriptionColor:desc()?getComputedStyle(desc()).color:'#ffffff',
-      titleWeight:titleWeight,titleStyle:titleStyle,visible:getComputedStyle(b).display!=='none',overlayConfigured:false,overlayColor:'#051c2c',overlayOpacity:72});
+      titleWeight:titleWeight,titleStyle:titleStyle,visible:getComputedStyle(b).display!=='none',overlayConfigured:false,overlayColor:'#051c2c',overlayOpacity:72,overlayMode:'uniform'});
   }
   function colorToHex(value){
     var v=String(value||'').trim(); if(/^#[0-9a-f]{6}$/i.test(v))return v;
@@ -240,6 +254,7 @@
     var outputs={width:document.getElementById('heroContainerSizeValue'),title:document.getElementById('heroTitleSizeValue'),kicker:document.getElementById('heroKickerSizeValue'),desc:document.getElementById('heroDescriptionSizeValue'),overlay:document.getElementById('heroOverlayOpacityValue')};
     var colors={title:document.getElementById('heroTitleColor'),kicker:document.getElementById('heroKickerColor'),desc:document.getElementById('heroDescriptionColor'),overlay:document.getElementById('heroOverlayColor')};
     var overlayOpacity=document.getElementById('heroOverlayOpacity');
+    var overlayModeButtons=panel.querySelectorAll('[data-hero-overlay-mode]');
 
     function setStatus(text,kind){ status.textContent=text||''; status.className='hero-editor-status'+(kind?' is-'+kind:''); }
     function syncUi(){
@@ -251,6 +266,7 @@
       panel.querySelectorAll('[data-hero-align]').forEach(function(btn){btn.classList.toggle('is-active',btn.getAttribute('data-hero-align')===pending.align);});
       panel.querySelectorAll('[data-hero-title-weight]').forEach(function(btn){btn.classList.toggle('is-active',btn.getAttribute('data-hero-title-weight')===pending.titleWeight);});
       panel.querySelectorAll('[data-hero-title-style]').forEach(function(btn){btn.classList.toggle('is-active',btn.getAttribute('data-hero-title-style')===pending.titleStyle);});
+      overlayModeButtons.forEach(function(btn){btn.classList.toggle('is-active',btn.getAttribute('data-hero-overlay-mode')===pending.overlayMode);});
       eye.classList.toggle('is-off',!pending.visible); eye.innerHTML=pending.visible?'<i class="fa-solid fa-eye"></i> แสดง':'<i class="fa-solid fa-eye-slash"></i> ซ่อน';
     }
     function preview(){ if(!pending)return; pending.configured=true; pending.template=activeTemplate; applyConfig(pending); syncUi(); setStatus('กำลังดูตัวอย่าง — กด “บันทึก” เพื่อบันทึกลงชีต',''); }
@@ -279,11 +295,12 @@
     colors.title.addEventListener('input',function(){if(pending){pending.titleColor=this.value;preview();}}); colors.kicker.addEventListener('input',function(){if(pending){pending.kickerColor=this.value;preview();}}); colors.desc.addEventListener('input',function(){if(pending){pending.descriptionColor=this.value;preview();}});
     if(colors.overlay) colors.overlay.addEventListener('input',function(){if(pending){pending.overlayConfigured=true;pending.overlayColor=this.value;preview();}});
     if(overlayOpacity) overlayOpacity.addEventListener('input',function(){if(pending){pending.overlayConfigured=true;pending.overlayOpacity=clamp(this.value,0,100);preview();}});
+    overlayModeButtons.forEach(function(btn){btn.addEventListener('click',function(){if(!pending)return; pending.overlayConfigured=true; pending.overlayMode=btn.getAttribute('data-hero-overlay-mode')||'uniform'; preview();});});
     saveBtn.addEventListener('click',async function(){ if(!pending)return; saveBtn.disabled=true; setStatus('กำลังบันทึก...',''); try{ var saved=await saveSetting(pending); committed=clone(saved); pending=clone(saved); writeCache(activeTemplate,saved); applyConfig(saved); syncUi(); setStatus('บันทึกข้อความ Header เรียบร้อย','ok'); setTimeout(function(){close(false);},550); }catch(e){setStatus('บันทึกไม่สำเร็จ: '+(e.message||e),'error');}finally{saveBtn.disabled=false;} });
 
     var b=box(); if(b){
-      b.addEventListener('pointerdown',function(e){ if(!panelOpen||!pending||!pending.visible||e.button!==0)return; var h=hero(); if(!h)return; var hr=h.getBoundingClientRect(), br=b.getBoundingClientRect(); drag={id:e.pointerId,startX:e.clientX,startY:e.clientY,left:br.left-hr.left,top:br.top-hr.top,heroRect:hr,width:br.width,height:br.height}; b.setPointerCapture&&b.setPointerCapture(e.pointerId); b.classList.add('hero-content-dragging'); e.preventDefault(); });
-      b.addEventListener('pointermove',function(e){ if(!drag||drag.id!==e.pointerId||!pending)return; var hr=hero().getBoundingClientRect(); var left=drag.left+(e.clientX-drag.startX), top=drag.top+(e.clientY-drag.startY); var br=b.getBoundingClientRect(); left=clamp(left,0,Math.max(0,hr.width-br.width)); top=clamp(top,0,Math.max(0,hr.height-br.height)); pending.xPct=hr.width?left/hr.width*100:0; pending.yPct=hr.height?top/hr.height*100:0; applyConfig(pending); syncUi(); e.preventDefault(); });
+      b.addEventListener('pointerdown',function(e){ if(!panelOpen||!pending||!pending.visible||e.button!==0)return; var h=hero(); if(!h)return; var hr=h.getBoundingClientRect(), br=b.getBoundingClientRect(); drag={id:e.pointerId,startX:e.clientX,startY:e.clientY,left:br.left-hr.left,top:br.top-hr.top,width:br.width,height:br.height}; b.setPointerCapture&&b.setPointerCapture(e.pointerId); b.classList.add('hero-content-dragging'); e.preventDefault(); });
+      b.addEventListener('pointermove',function(e){ if(!drag||drag.id!==e.pointerId||!pending)return; var hr=hero().getBoundingClientRect(); var left=drag.left+(e.clientX-drag.startX), top=drag.top+(e.clientY-drag.startY); left=clamp(left,0,Math.max(0,hr.width-drag.width)); top=clamp(top,0,Math.max(0,hr.height-drag.height)); pending.xPct=hr.width?left/hr.width*100:0; pending.yPct=hr.height?top/hr.height*100:0; applyConfig(pending); syncUi(); e.preventDefault(); });
       function endDrag(e){ if(!drag||drag.id!==e.pointerId)return; drag=null; b.classList.remove('hero-content-dragging'); setStatus('ตำแหน่งใหม่ยังเป็นตัวอย่าง — กด “บันทึก” เพื่อบันทึกลงชีต',''); }
       b.addEventListener('pointerup',endDrag); b.addEventListener('pointercancel',endDrag);
     }

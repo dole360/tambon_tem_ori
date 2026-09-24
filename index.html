@@ -384,8 +384,8 @@
   <link rel="stylesheet" href="template-switcher.css?v=20260924-ui-3">
   <script>window.LP360_TEMPLATE_SITE="tambon";window.LP360_TEMPLATE_ADMIN_TOKEN_KEY="LP360:TAMBOL:mysiteAdminToken";</script>
   <script src="template-switcher.js?v=20260924-sticky-header-1"></script>
-  <link rel="stylesheet" href="hero-content-editor.css?v=20260924-template5-visibility-1">
-  <script defer src="hero-content-editor.js?v=20260924-template5-visibility-1"></script>
+  <link rel="stylesheet" href="hero-content-editor.css?v=20260924-overlay-gradient-drag-1">
+  <script defer src="hero-content-editor.js?v=20260924-overlay-gradient-drag-1"></script>
 </head>
 <body class="website-data-loading theme-v2">
   <div id="adminLoginModal" class="admin-login-modal" hidden>
@@ -1393,7 +1393,7 @@
 
   <div id="heroContentEditorPanel" class="hero-content-editor-panel admin-only" hidden aria-hidden="true">
     <div class="hero-content-editor-head">
-      <div><h3>จัดการข้อความ Header</h3><p>ลากกล่องข้อความในรูป Hero เพื่อย้ายตำแหน่ง</p></div>
+      <div><h3>จัดการข้อความ Header</h3><p>ลากกล่องข้อความในรูป Hero ได้ทั้งซ้าย-ขวาและขึ้น-ลง</p></div>
       <button id="heroContentEditorClose" class="hero-content-editor-close" type="button" aria-label="ปิดโดยไม่บันทึก">×</button>
     </div>
     <div class="hero-editor-row"><span class="hero-editor-label">ความกว้าง</span><div class="hero-editor-stepper"><button type="button" data-hero-step="widthPct" data-delta="-5">−</button><output id="heroContainerSizeValue">55%</output><button type="button" data-hero-step="widthPct" data-delta="5">+</button></div></div>
@@ -1406,6 +1406,14 @@
       <label class="hero-editor-color">Text หลัก<input id="heroTitleColor" type="color" value="#ffffff"></label>
       <label class="hero-editor-color">Text บน<input id="heroKickerColor" type="color" value="#ffffff"></label>
       <label class="hero-editor-color">TEXT ล่าง<input id="heroDescriptionColor" type="color" value="#ffffff"></label>
+    </div>
+    <div class="hero-editor-overlay-mode">
+      <span class="hero-editor-overlay-mode-title">รูปแบบความเข้ม Overlay</span>
+      <div class="hero-editor-overlay-modes" role="group" aria-label="รูปแบบความเข้ม Overlay">
+        <button type="button" data-hero-overlay-mode="left" title="เข้มด้านซ้ายแล้วค่อย ๆ จางไปทางขวา">ซ้าย→ขวา</button>
+        <button type="button" data-hero-overlay-mode="right" title="เข้มด้านขวาแล้วค่อย ๆ จางไปทางซ้าย">ขวา→ซ้าย</button>
+        <button type="button" data-hero-overlay-mode="uniform" title="ความเข้มเท่ากันตลอดภาพ">เท่ากัน</button>
+      </div>
     </div>
     <div class="hero-editor-overlay-control">
       <label class="hero-editor-overlay-color">Overlay <input id="heroOverlayColor" type="color" value="#051c2c" aria-label="สี Overlay"></label>

@@ -1,4 +1,4 @@
-/* LP360 Hero Content Editor — 2026-09-24 v2 */
+/* LP360 Hero Content Editor — 2026-09-24 v3 overlay gradient + 2D drag */
 #heroContentEditorPanel[hidden]{display:none!important}
 .hero-content-editor-panel{
   position:fixed!important;right:12px!important;top:50%!important;transform:translateY(-50%)!important;
@@ -62,13 +62,13 @@ body.hero-content-editing #home.hero .hero-content.hero-content-dragging{cursor:
 #heroOverlayOpacityValue{text-align:right;font-size:10.5px!important;font-weight:800!important;color:#0f766e!important}
 
 /* Replace the dark tint used by each Template without covering the actual image. */
-body.lp-template2 #websiteHeroOverlay.lp-hero-overlay-managed::after{background:var(--lp-hero-overlay-rgba,transparent)!important}
-body.lp-template3 #websiteHeroOverlay.lp-hero-overlay-managed::before{background:var(--lp-hero-overlay-rgba,transparent)!important}
+body.lp-template2 #websiteHeroOverlay.lp-hero-overlay-managed::after{background:var(--lp-hero-overlay-fill,var(--lp-hero-overlay-rgba,transparent))!important}
+body.lp-template3 #websiteHeroOverlay.lp-hero-overlay-managed::before{background:var(--lp-hero-overlay-fill,var(--lp-hero-overlay-rgba,transparent))!important}
 body.lp-template4 #home.hero.lp-hero-overlay-managed::before,
 body.lp-template5 #home.hero.lp-hero-overlay-managed::before,
 body.lp-template6 #home.hero.lp-hero-overlay-managed::before,
 body.lp-template7 #home.hero.lp-hero-overlay-managed::before,
-body.lp-template8 #home.hero.lp-hero-overlay-managed::before{background:var(--lp-hero-overlay-rgba,transparent)!important}
+body.lp-template8 #home.hero.lp-hero-overlay-managed::before{background:var(--lp-hero-overlay-fill,var(--lp-hero-overlay-rgba,transparent))!important}
 @media(max-width:640px){.hero-editor-overlay-control{grid-template-columns:88px 1fr;gap:6px}}
 
 /* Template5 visibility rule — hide only the editable tint layer.
@@ -76,6 +76,15 @@ body.lp-template8 #home.hero.lp-hero-overlay-managed::before{background:var(--lp
 body.lp-template5 #home.hero.lp-hero-overlay-managed::before,
 body.lp-template5 .hero.lp-hero-overlay-managed::before{
   background:
-    linear-gradient(var(--lp-hero-overlay-rgba,transparent),var(--lp-hero-overlay-rgba,transparent)),
+    var(--lp-hero-overlay-fill,linear-gradient(transparent,transparent)),
     linear-gradient(165deg,transparent 0 60%,rgba(15,93,255,.70) 60% 76%,rgba(115,255,56,.73) 76% 100%)!important;
 }
+
+/* Overlay intensity direction: left fade, right fade, or uniform. */
+.hero-editor-overlay-mode{padding:8px 0 4px;border-top:1px solid #eef2f7}
+.hero-editor-overlay-mode-title{display:block;margin-bottom:6px;font-size:11px!important;font-weight:800!important;color:#334155!important}
+.hero-editor-overlay-modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.hero-editor-overlay-modes button{height:28px!important;padding:0 5px!important;border:1px solid #dbe2ea!important;border-radius:7px!important;background:#fff!important;color:#334155!important;font-size:9.5px!important;font-weight:800!important;cursor:pointer!important;white-space:nowrap!important}
+.hero-editor-overlay-modes button.is-active{background:#0f766e!important;color:#fff!important;border-color:#0f766e!important}
+/* Custom Header box must shrink to its content so it can be dragged on both axes. */
+body.hero-content-editing #home.hero .hero-content{min-height:0!important;height:auto!important;user-select:none!important;-webkit-user-select:none!important}
