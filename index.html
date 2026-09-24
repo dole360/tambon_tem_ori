@@ -384,6 +384,8 @@
   <link rel="stylesheet" href="template-switcher.css?v=20260924-ui-3">
   <script>window.LP360_TEMPLATE_SITE="tambon";window.LP360_TEMPLATE_ADMIN_TOKEN_KEY="LP360:TAMBOL:mysiteAdminToken";</script>
   <script src="template-switcher.js?v=20260924-ui-2"></script>
+  <link rel="stylesheet" href="hero-content-editor.css?v=20260924-hero-editor-1">
+  <script defer src="hero-content-editor.js?v=20260924-hero-editor-1"></script>
 </head>
 <body class="website-data-loading theme-v2">
   <div id="adminLoginModal" class="admin-login-modal" hidden>
@@ -551,6 +553,7 @@
       <div id="editwebsite" class="editwebsite admin-only" aria-label="แก้ไขหน้าเว็บไซต์">
         <button class="editwebsite-btn" type="button" data-editwebsite="text"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>แก้ไขข้อความ</button>
         <button class="editwebsite-btn" type="button" data-editwebsite="image"><i class="fa-solid fa-image" aria-hidden="true"></i>แก้ไขโลโก้ ชื่อ รูปหัวเว็บไซต์</button>
+        <button id="heroContentEditorButton" class="editwebsite-btn admin-only" type="button"><i class="fa-solid fa-up-down-left-right" aria-hidden="true"></i>จัดการ Hero Content</button>
       </div>
       <div class="container hero-content">
         <div id="heroKickerText" class="eyebrow" hidden></div>
@@ -1386,6 +1389,27 @@
         <button id="templateSwitcherSave" class="template-switcher-action template-switcher-save" type="button">บันทึก Template</button>
       </div>
     </div>
+  </div>
+
+  <div id="heroContentEditorPanel" class="hero-content-editor-panel admin-only" hidden aria-hidden="true">
+    <div class="hero-content-editor-head">
+      <div><h3>จัดการ Hero Content</h3><p>ลากกล่องข้อความในรูป Hero เพื่อย้ายตำแหน่ง</p></div>
+      <button id="heroContentEditorClose" class="hero-content-editor-close" type="button" aria-label="ปิดโดยไม่บันทึก">×</button>
+    </div>
+    <div class="hero-editor-row"><span class="hero-editor-label">ขนาด Container</span><div class="hero-editor-stepper"><button type="button" data-hero-step="widthPct" data-delta="-5">−</button><output id="heroContainerSizeValue">55%</output><button type="button" data-hero-step="widthPct" data-delta="5">+</button></div></div>
+    <div class="hero-editor-row"><span class="hero-editor-label">ขนาด Title</span><div class="hero-editor-stepper"><button type="button" data-hero-step="titleSize" data-delta="-2">−</button><output id="heroTitleSizeValue">56px</output><button type="button" data-hero-step="titleSize" data-delta="2">+</button></div></div>
+    <div class="hero-editor-row"><span class="hero-editor-label">ขนาด Kicker</span><div class="hero-editor-stepper"><button type="button" data-hero-step="kickerSize" data-delta="-1">−</button><output id="heroKickerSizeValue">12px</output><button type="button" data-hero-step="kickerSize" data-delta="1">+</button></div></div>
+    <div class="hero-editor-row"><span class="hero-editor-label">ขนาด Description</span><div class="hero-editor-stepper"><button type="button" data-hero-step="descriptionSize" data-delta="-1">−</button><output id="heroDescriptionSizeValue">16px</output><button type="button" data-hero-step="descriptionSize" data-delta="1">+</button></div></div>
+    <div class="hero-editor-row"><span class="hero-editor-label">จัดแนวทั้ง 3 ข้อความ</span><div class="hero-editor-align"><button type="button" data-hero-align="left" aria-label="ชิดซ้าย"><i class="fa-solid fa-align-left"></i></button><button type="button" data-hero-align="center" aria-label="ตรงกลาง"><i class="fa-solid fa-align-center"></i></button><button type="button" data-hero-align="right" aria-label="ชิดขวา"><i class="fa-solid fa-align-right"></i></button></div></div>
+    <div class="hero-editor-colors">
+      <label class="hero-editor-color">Title<input id="heroTitleColor" type="color" value="#ffffff"></label>
+      <label class="hero-editor-color">Kicker<input id="heroKickerColor" type="color" value="#ffffff"></label>
+      <label class="hero-editor-color">Description<input id="heroDescriptionColor" type="color" value="#ffffff"></label>
+    </div>
+    <div class="hero-editor-row"><span class="hero-editor-label">การมองเห็น</span><button id="heroContentVisibility" class="hero-editor-eye" type="button"><i class="fa-solid fa-eye"></i> แสดง</button></div>
+    <div class="hero-editor-note">การลาก/ปรับขนาด/สีเป็นตัวอย่างทันที แต่จะยังไม่บันทึกจนกด “บันทึก”</div>
+    <div id="heroContentEditorStatus" class="hero-editor-status" role="status" aria-live="polite"></div>
+    <div class="hero-editor-actions"><button id="heroContentEditorCancel" type="button">ยกเลิก</button><button id="heroContentEditorSave" type="button">บันทึก</button></div>
   </div>
 
 </body>
