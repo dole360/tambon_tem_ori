@@ -147,7 +147,7 @@
     var link=document.createElement('link');
     link.id='lpDynamicTemplateCss';
     link.rel='stylesheet';
-    link.href='template'+n+'.css?v=20260924-fullwidth-learning-v1';
+    link.href='template'+n+'.css?v=20260925-template5-remove-learning-v1';
     lastCssReady=new Promise(function(resolve){
       var done=false;
       function finish(){ if(done)return; done=true; resolve(); }

@@ -1018,7 +1018,8 @@ body.lp-template5 .hero::before {
 }
 body.lp-template5 #home.hero::after,
 body.lp-template5 .hero::after {
-  content: "LEARNING" !important;
+  content: none !important;
+  display: none !important;
   left: 50% !important;
   bottom: 92px !important;
   width: auto !important;
