@@ -96,8 +96,23 @@
     if(oldCss) oldCss.remove();
     document.querySelectorAll('script[data-lp-template-script]').forEach(function(s){ s.remove(); });
   }
+  function ensureUnifiedAdminStyle(){
+    var link=document.getElementById('lpUnifiedAdminStyle');
+    if(!link){
+      link=document.createElement('link');
+      link.id='lpUnifiedAdminStyle';
+      link.rel='stylesheet';
+      link.href='admin-unified-style.css?v=20260924-1';
+    }
+    /* Keep this after the active Template CSS so admin controls stay identical
+       when switching Template1–Template9 without a reload. */
+    if(document.head) document.head.appendChild(link);
+    return link;
+  }
+  ensureUnifiedAdminStyle();
+
   function loadCss(n){
-    if(n===1){ lastCssReady=Promise.resolve(); return; }
+    if(n===1){ ensureUnifiedAdminStyle(); lastCssReady=Promise.resolve(); return; }
     var link=document.createElement('link');
     link.id='lpDynamicTemplateCss';
     link.rel='stylesheet';
@@ -110,6 +125,7 @@
       setTimeout(finish,2500);
     });
     document.head.appendChild(link);
+    ensureUnifiedAdminStyle();
   }
   function loadThemeJs(n){
     if(!JS_TEMPLATES[n] || !isIndexPage()) return;
