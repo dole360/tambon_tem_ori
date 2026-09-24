@@ -381,9 +381,9 @@
       media="print" onload="this.media='all'">
   <link rel="stylesheet" href="theme-modern.css?v=20260902-buttons-2">
 
-  <link rel="stylesheet" href="template-switcher.css?v=20260924-1">
+  <link rel="stylesheet" href="template-switcher.css?v=20260924-ui-3">
   <script>window.LP360_TEMPLATE_SITE="tambon";window.LP360_TEMPLATE_ADMIN_TOKEN_KEY="LP360:TAMBOL:mysiteAdminToken";</script>
-  <script src="template-switcher.js?v=20260924-1"></script>
+  <script src="template-switcher.js?v=20260924-ui-2"></script>
 </head>
 <body class="website-data-loading theme-v2">
   <div id="adminLoginModal" class="admin-login-modal" hidden>
@@ -551,7 +551,6 @@
       <div id="editwebsite" class="editwebsite admin-only" aria-label="แก้ไขหน้าเว็บไซต์">
         <button class="editwebsite-btn" type="button" data-editwebsite="text"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>แก้ไขข้อความ</button>
         <button class="editwebsite-btn" type="button" data-editwebsite="image"><i class="fa-solid fa-image" aria-hidden="true"></i>แก้ไขโลโก้ ชื่อ รูปหัวเว็บไซต์</button>
-        <button id="templateSwitcherButton" class="editwebsite-btn" type="button"><i class="fa-solid fa-palette" aria-hidden="true"></i>เปลี่ยน Template</button>
       </div>
       <div class="container hero-content">
         <div id="heroKickerText" class="eyebrow" hidden></div>
@@ -1369,18 +1368,23 @@
   <script defer src="button-section.js?v=20260922-ui-cleanup-1"></script>
   <script defer src="index-fast.js?v=20260922-ui-cleanup-1"></script>
   <script defer src="readbook-box.js?v=20260919-readbook-1"></script>
+  <button id="templateSwitcherButton" class="admin-only template-switcher-fixed-button" type="button" aria-haspopup="dialog" aria-controls="templateSwitcherModal"><i class="fa-solid fa-palette" aria-hidden="true"></i>เปลี่ยน Template</button>
 
-  <div id="templateSwitcherModal" class="template-switcher-modal" hidden aria-hidden="false">
-    <div class="template-switcher-dialog" role="dialog" aria-modal="true" aria-labelledby="templateSwitcherTitle">
+  <div id="templateSwitcherModal" class="template-switcher-modal" hidden aria-hidden="true">
+    <div class="template-switcher-dialog" role="dialog" aria-modal="false" aria-labelledby="templateSwitcherTitle">
       <div class="template-switcher-head">
         <div>
           <h2 id="templateSwitcherTitle" class="template-switcher-title">เปลี่ยน Template</h2>
-          <p class="template-switcher-sub">Template ปัจจุบัน: <strong id="templateSwitcherCurrent">Template1</strong></p>
+          <p class="template-switcher-sub">ที่บันทึกไว้: <strong id="templateSwitcherCurrent">Template1</strong></p>
         </div>
-        <button class="template-switcher-close" type="button" aria-label="ปิด">×</button>
+        <button class="template-switcher-close" type="button" aria-label="ปิดโดยไม่บันทึก">×</button>
       </div>
-      <div class="template-switcher-grid" aria-label="เลือก Template"></div>
+      <div class="template-switcher-grid" aria-label="เลือก Template เพื่อดูตัวอย่าง"></div>
       <div class="template-switcher-status" role="status" aria-live="polite"></div>
+      <div class="template-switcher-actions">
+        <button id="templateSwitcherCancel" class="template-switcher-action template-switcher-cancel" type="button">ยกเลิก</button>
+        <button id="templateSwitcherSave" class="template-switcher-action template-switcher-save" type="button">บันทึก Template</button>
+      </div>
     </div>
   </div>
 
