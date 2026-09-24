@@ -111,8 +111,23 @@
   }
   ensureUnifiedAdminStyle();
 
+  function ensureStickyHeaderStyle(){
+    var link=document.getElementById('lpStickyHeaderStyle');
+    if(!link){
+      link=document.createElement('link');
+      link.id='lpStickyHeaderStyle';
+      link.rel='stylesheet';
+      link.href='site-header-sticky.css?v=20260924-1';
+    }
+    /* Always keep this after the active Template CSS. This makes site-header
+       sticky for Template1-9 and prevents Template8/9 announcement overlap. */
+    if(document.head) document.head.appendChild(link);
+    return link;
+  }
+  ensureStickyHeaderStyle();
+
   function loadCss(n){
-    if(n===1){ ensureUnifiedAdminStyle(); lastCssReady=Promise.resolve(); return; }
+    if(n===1){ ensureUnifiedAdminStyle(); ensureStickyHeaderStyle(); lastCssReady=Promise.resolve(); return; }
     var link=document.createElement('link');
     link.id='lpDynamicTemplateCss';
     link.rel='stylesheet';
@@ -126,6 +141,7 @@
     });
     document.head.appendChild(link);
     ensureUnifiedAdminStyle();
+    ensureStickyHeaderStyle();
   }
   function loadThemeJs(n){
     if(!JS_TEMPLATES[n] || !isIndexPage()) return;
