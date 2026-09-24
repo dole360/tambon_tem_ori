@@ -5,7 +5,8 @@
     {name:'ฟ้าน้ำทะเล',primary:'#087e91',secondary:'#20b5c2',soft:'#e9f8fa',dark:'#123d50'},
     {name:'เขียวธรรมชาติ',primary:'#287b53',secondary:'#71b86e',soft:'#ebf7ed',dark:'#1d4739'},
     {name:'ส้มอาทิตย์',primary:'#d65a31',secondary:'#f6aa4d',soft:'#fff1e2',dark:'#593b30'},
-    {name:'ม่วงสร้างสรรค์',primary:'#7148ad',secondary:'#ad79d8',soft:'#f3ebfc',dark:'#392e58'}
+    {name:'ม่วงสร้างสรรค์',primary:'#7148ad',secondary:'#ad79d8',soft:'#f3ebfc',dark:'#392e58'},
+    {name:'ชมพูโรส',primary:'#c45479',secondary:'#e791a4',soft:'#fff0f5',dark:'#624153'}
   ];
   var api=window.APP_CONFIG && (window.APP_CONFIG.EXEC_URL||window.APP_CONFIG.API_URL)||'';
   var tokenKey=window.LP360_TEMPLATE_ADMIN_TOKEN_KEY||'';
@@ -14,9 +15,9 @@
   var button,modal,grid,status,saveButton;
   function template(){var value=window.LP360TemplateSwitcher?.getCurrent()||'Template1';return /^Template[1-9]$/.test(value)?value:'Template1';}
   function cacheKey(t){return 'LP360:COLOR:'+site+':'+encodeURIComponent(api)+':'+t;}
-  function remembered(t){try{var n=Number(localStorage.getItem(cacheKey(t)));return n>=1&&n<=5?n:1;}catch(_){return 1;}}
+  function remembered(t){try{var n=Number(localStorage.getItem(cacheKey(t)));return n>=1&&n<=6?n:1;}catch(_){return 1;}}
   function apply(n){
-    n=Math.max(1,Math.min(5,Number(n)||1));
+    n=Math.max(1,Math.min(6,Number(n)||1));
     var body=document.body,p=palettes[n-1];
     body.classList.toggle('lp-color-themed',n!==1);
     body.style.setProperty('--lp-color-primary',p.primary);
