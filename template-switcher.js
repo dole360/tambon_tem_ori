@@ -10,6 +10,7 @@
   var current = 1;
   var committed = 1;
   var pending = 1;
+  var savingTemplate = false;
   var applyGeneration = 0;
   var lastCssReady = Promise.resolve();
   var bootStyleId = 'lp360UiCriticalBootStyle';
@@ -354,7 +355,6 @@
     var status=modal.querySelector('.template-switcher-status');
     if(!grid || !closeBtn || !cancelBtn || !saveBtn || !status) return;
 
-    var savingTemplate=false;
     function setTemplateSaving(value){
       savingTemplate=value; saveBtn.classList.toggle('is-saving',value);
       saveBtn.setAttribute('aria-busy',value?'true':'false');
@@ -390,11 +390,11 @@
       modal.setAttribute('aria-hidden','false');
       openBtn.hidden=true;
     }
-    function closeWithoutSave(){
+    function closeWithoutSave(allowDiscard){
       if(savingTemplate) return;
-      if(pending!==committed){
+      if(pending!==committed && !allowDiscard){
         status.className='template-switcher-status is-preview';
-        status.textContent='กรุณาบันทึก Template ก่อนปิดหน้าต่าง';
+        status.textContent='มีการแก้ไขที่ยังไม่บันทึก — กด “ยกเลิก” เพื่อทิ้งการแก้ไข';
         return;
       }
       pending=committed;
@@ -411,7 +411,7 @@
 
     openBtn.addEventListener('click',openSwitcher);
     closeBtn.addEventListener('click',closeWithoutSave);
-    cancelBtn.addEventListener('click',closeWithoutSave);
+    cancelBtn.addEventListener('click',function(){closeWithoutSave(true);});
     document.addEventListener('keydown',function(e){
       if(e.key==='Escape' && !modal.hidden) closeWithoutSave();
     });

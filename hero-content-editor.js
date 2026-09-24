@@ -287,14 +287,14 @@
       }
       pending.template=activeTemplate; unsavedHero=false; panel.hidden=false; panel.setAttribute('aria-hidden','false'); panelOpen=true; document.body.classList.add('hero-content-editing'); preview(); unsavedHero=false;
     }
-    function close(revert){
+    function close(revert,allowDiscard){
       if(savingHero) return;
-      if(revert && unsavedHero){ setStatus('กรุณาบันทึกก่อนปิดหน้าต่าง','error'); return; }
+      if(revert && unsavedHero && !allowDiscard){ setStatus('กรุณาบันทึกก่อนปิดหน้าต่าง','error'); return; }
       panel.hidden=true; panel.setAttribute('aria-hidden','true'); panelOpen=false; document.body.classList.remove('hero-content-editing');
       if(revert){ if(committed&&committed.configured)applyConfig(committed); else clearCustom(); }
       pending=null; drag=null; unsavedHero=false;
     }
-    openBtn.addEventListener('click',open); closeBtn.addEventListener('click',function(){close(true);}); cancelBtn.addEventListener('click',function(){close(true);});
+    openBtn.addEventListener('click',open); closeBtn.addEventListener('click',function(){close(true);}); cancelBtn.addEventListener('click',function(){close(true,true);});
     eye.addEventListener('click',function(){ if(!pending)return; pending.visible=!pending.visible; preview(); });
     panel.querySelectorAll('[data-hero-step]').forEach(function(btn){btn.addEventListener('click',function(){ if(!pending)return; var key=btn.getAttribute('data-hero-step'), d=Number(btn.getAttribute('data-delta')||0); if(key==='titleSize')pending.titleSize=clamp(pending.titleSize+d,12,140); if(key==='kickerSize')pending.kickerSize=clamp(pending.kickerSize+d,8,56); if(key==='descriptionSize')pending.descriptionSize=clamp(pending.descriptionSize+d,9,72); preview(); });});
     panel.querySelectorAll('[data-hero-align]').forEach(function(btn){btn.addEventListener('click',function(){if(!pending)return; pending.align=btn.getAttribute('data-hero-align');preview();});});
