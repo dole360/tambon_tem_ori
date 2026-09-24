@@ -847,7 +847,7 @@ body.lp-template5 .mobile-bottom-link:hover { color: var(--t7-orange) !important
 @media (max-width: 900px) {
   body.lp-template5 .site-header { position: sticky; }
   body.lp-template5 .brand { min-width: 0; background: transparent !important; color: var(--t7-orange) !important; padding: 10px 6px !important; }
-  body.lp-template5 .brand-icon { border-color: var(--t7-orange) !important; background-color: rgba(239,69,29,.10) !important; }
+  body.lp-template5 .brand-icon { border-color: var(--t7-orange) !important; }
   body.lp-template5 #home.hero,
   body.lp-template5 .hero { min-height: 470px; height: 62vh; }
   body.lp-template5 .hero-content { padding: 72px 28px 84px !important; }
