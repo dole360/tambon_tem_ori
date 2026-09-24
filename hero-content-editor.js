@@ -105,10 +105,13 @@
     var visible=cfg.visible!==false;
     var n=templateNumber(cfg.template||activeTemplate);
     if(!visible){
+      // Hide only the configurable tint. Template5 keeps its own decorative
+      // diagonal layers / LEARNING artwork and original image treatment.
       setOverlayManaged(true,'rgba(0,0,0,0)');
       if(url) setImportant(o,'background-image','url("'+escapedUrl(url)+'")');
       else setImportant(o,'background-image','none');
-      setImportant(o,'filter','none');
+      if(n===5) remove(o,'filter');
+      else setImportant(o,'filter','none');
       return;
     }
     remove(o,'filter');
