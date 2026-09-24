@@ -233,12 +233,10 @@ body.lp-template2 #editwebsite {
 }
 
 body.lp-template2 #editwebsite .editwebsite-btn {
-  border-radius: 999px !important;
-  background: rgba(255,255,255,.94) !important;
+  border-radius: 12px !important;
   color: var(--t2-ink) !important;
   box-shadow: 0 8px 22px rgba(0,0,0,.12) !important;
 }
-
 body.lp-template2 #websiteHeroOverlay .hero-image-progress-wrap {
   width: min(360px, calc(100% - 40px));
   border-radius: 18px !important;
