@@ -410,7 +410,7 @@
     }
 
     openBtn.addEventListener('click',openSwitcher);
-    closeBtn.addEventListener('click',closeWithoutSave);
+    closeBtn.addEventListener('click',function(){closeWithoutSave(false);});
     cancelBtn.addEventListener('click',function(){closeWithoutSave(true);});
     document.addEventListener('keydown',function(e){
       if(e.key==='Escape' && !modal.hidden) closeWithoutSave();
