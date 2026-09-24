@@ -261,6 +261,26 @@
 
     var savingHero=false, unsavedHero=false;
     function setHeroSaving(value){ savingHero=value; saveBtn.disabled=value; saveBtn.classList.toggle('is-saving',value); saveBtn.setAttribute('aria-busy',value?'true':'false'); closeBtn.disabled=value; cancelBtn.disabled=value; }
+  function showUnsavedWarning(){
+    var existing=document.getElementById('lp360UnsavedWarning');
+    if(existing){ existing.querySelector('button').focus(); return; }
+    var previous=document.activeElement;
+    var overlay=document.createElement('div');
+    overlay.id='lp360UnsavedWarning';
+    overlay.setAttribute('role','presentation');
+    overlay.innerHTML='<div class="lp360-unsaved-dialog" role="alertdialog" aria-modal="true" aria-labelledby="lp360UnsavedMessage"><p id="lp360UnsavedMessage">มีการแก้ไขที่ยังไม่บันทึก — กด “ยกเลิก” เพื่อทิ้งการแก้ไข</p><button type="button">OK</button></div>';
+    if(!document.getElementById('lp360UnsavedWarningStyle')){
+      var style=document.createElement('style'); style.id='lp360UnsavedWarningStyle';
+      style.textContent='#lp360UnsavedWarning{position:fixed!important;inset:0!important;z-index:2147483647!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:16px!important;background:rgba(15,23,42,.55)!important}#lp360UnsavedWarning .lp360-unsaved-dialog{box-sizing:border-box!important;width:min(420px,100%)!important;padding:24px!important;border-radius:14px!important;background:#fff!important;box-shadow:0 20px 60px rgba(0,0,0,.3)!important;text-align:center!important}#lp360UnsavedWarning p{margin:0 0 20px!important;color:#b91c1c!important;font-size:16px!important;font-weight:700!important;line-height:1.5!important}#lp360UnsavedWarning button{min-width:80px!important;padding:9px 22px!important;border:0!important;border-radius:8px!important;background:#b91c1c!important;color:white!important;font-size:14px!important;font-weight:700!important;cursor:pointer!important}';
+      document.head.appendChild(style);
+    }
+    function dismiss(){ overlay.removeEventListener('keydown',trap); overlay.remove(); if(previous && previous.focus) previous.focus(); }
+    function trap(e){ if(e.key==='Escape' || e.key==='Enter' || e.key===' '){ e.preventDefault(); e.stopPropagation(); dismiss(); } else if(e.key==='Tab'){ e.preventDefault(); overlay.querySelector('button').focus(); } }
+    overlay.addEventListener('keydown',trap);
+    overlay.querySelector('button').addEventListener('click',dismiss);
+    document.body.appendChild(overlay);
+    overlay.querySelector('button').focus();
+  }
     function setStatus(text,kind){ status.textContent=text||''; status.className='hero-editor-status'+(kind?' is-'+kind:''); }
     function syncUi(){
       if(!pending)return; outputs.title.textContent=Math.round(pending.titleSize)+'px'; outputs.kicker.textContent=Math.round(pending.kickerSize)+'px'; outputs.desc.textContent=Math.round(pending.descriptionSize)+'px';
@@ -289,7 +309,7 @@
     }
     function close(revert,allowDiscard){
       if(savingHero) return;
-      if(revert && unsavedHero && !allowDiscard){ setStatus('กรุณาบันทึกก่อนปิดหน้าต่าง','error'); return; }
+      if(revert && unsavedHero && !allowDiscard){ showUnsavedWarning(); return; }
       panel.hidden=true; panel.setAttribute('aria-hidden','true'); panelOpen=false; document.body.classList.remove('hero-content-editing');
       if(revert){ if(committed&&committed.configured)applyConfig(committed); else clearCustom(); }
       pending=null; drag=null; unsavedHero=false;
