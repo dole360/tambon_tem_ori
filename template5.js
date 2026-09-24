@@ -17,21 +17,7 @@
 
     content.querySelector('.template5-hero-cta')?.remove();
 
-    if (!hero.querySelector('.template5-hero-side.is-left')) {
-      var left = document.createElement('span');
-      left.className = 'template5-hero-side is-left';
-      left.setAttribute('aria-hidden', 'true');
-      left.textContent = '‹';
-      hero.appendChild(left);
-    }
 
-    if (!hero.querySelector('.template5-hero-side.is-right')) {
-      var right = document.createElement('span');
-      right.className = 'template5-hero-side is-right';
-      right.setAttribute('aria-hidden', 'true');
-      right.textContent = '›';
-      hero.appendChild(right);
-    }
 
     if (!document.querySelector('.template5-performance-strip')) {
       var strip = document.createElement('div');

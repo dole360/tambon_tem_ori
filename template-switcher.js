@@ -163,7 +163,7 @@
   function loadThemeJs(n){
     if(!JS_TEMPLATES[n] || !isIndexPage()) return;
     var script=document.createElement('script');
-    script.src='template'+n+'.js?v=20260924-template9-orange-v2';
+    script.src='template'+n+'.js?v=20260925-remove-hero-arrows-v1';
     script.setAttribute('data-lp-template-script','Template'+n);
     (document.body || document.head).appendChild(script);
   }

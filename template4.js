@@ -11,21 +11,7 @@
 
     content.querySelector('.template4-hero-cta')?.remove();
 
-    if (!hero.querySelector('.template4-hero-side.is-left')) {
-      var left = document.createElement('span');
-      left.className = 'template4-hero-side is-left';
-      left.setAttribute('aria-hidden', 'true');
-      left.textContent = '‹';
-      hero.appendChild(left);
-    }
 
-    if (!hero.querySelector('.template4-hero-side.is-right')) {
-      var right = document.createElement('span');
-      right.className = 'template4-hero-side is-right';
-      right.setAttribute('aria-hidden', 'true');
-      right.textContent = '›';
-      hero.appendChild(right);
-    }
   }
 
   if (document.readyState === 'loading') {
