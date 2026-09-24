@@ -564,7 +564,7 @@ body.lp-template8 .team-card-name{color:var(--t11-forest)!important}
 /* admin banner */
 body.lp-template8 .admin-mode-banner{
   z-index:20000!important;
-  background:var(--t11-forest)!important;
+  background:var(--lp-admin-red)!important;
   color:#fff!important;
   border:0!important;
 }
