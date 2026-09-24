@@ -15,13 +15,7 @@
       content.insertBefore(badge, content.firstChild);
     }
 
-    if (!content.querySelector('.template5-hero-cta')) {
-      var cta = document.createElement('a');
-      cta.className = 'template5-hero-cta';
-      cta.href = '#learningSourceBox';
-      cta.textContent = 'EXPLORE NOW';
-      content.appendChild(cta);
-    }
+    content.querySelector('.template5-hero-cta')?.remove();
 
     if (!hero.querySelector('.template5-hero-side.is-left')) {
       var left = document.createElement('span');

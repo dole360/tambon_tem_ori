@@ -95,11 +95,14 @@ body.lp-template4 .brand {
   display: inline-flex !important;
   align-items: center;
   gap: 11px;
-  background: var(--t6-orange) !important;
-  color: #fff !important;
+  background: transparent !important;
+  color: var(--t6-forest-deep) !important;
   font-weight: 800 !important;
   line-height: 1.15;
   text-decoration: none !important;
+}
+body.lp-template4 .announcement .brand {
+  color: #fff !important;
 }
 body.lp-template4 .brand-icon {
   width: 42px !important;

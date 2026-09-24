@@ -9,13 +9,7 @@
     var content = hero && hero.querySelector('.hero-content');
     if (!hero || !content) return;
 
-    if (!content.querySelector('.template4-hero-cta')) {
-      var cta = document.createElement('a');
-      cta.className = 'template4-hero-cta';
-      cta.href = '#learningSourceBox';
-      cta.textContent = 'สำรวจเว็บไซต์';
-      content.appendChild(cta);
-    }
+    content.querySelector('.template4-hero-cta')?.remove();
 
     if (!hero.querySelector('.template4-hero-side.is-left')) {
       var left = document.createElement('span');

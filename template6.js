@@ -6,13 +6,7 @@
     var content=hero&&hero.querySelector('.hero-content');
     if(!hero||!content)return;
 
-    if(!content.querySelector('.template6-hero-cta')){
-      var cta=document.createElement('a');
-      cta.className='template6-hero-cta';
-      cta.href='#learningSourceBox';
-      cta.textContent='LEARN MORE';
-      content.appendChild(cta);
-    }
+    content.querySelector('.template6-hero-cta')?.remove();
 
     if(!hero.querySelector('.template6-ocean-mark')){
       var mark=document.createElement('div');

@@ -5,13 +5,7 @@
     var hero=document.getElementById('home');
     var content=hero&&hero.querySelector('.hero-content');
     if(!hero||!content)return;
-    if(!content.querySelector('.template7-hero-cta')){
-      var cta=document.createElement('a');
-      cta.className='template7-hero-cta';
-      cta.href='#news';
-      cta.textContent='ดูข้อมูลเพิ่มเติม';
-      content.appendChild(cta);
-    }
+    content.querySelector('.template7-hero-cta')?.remove();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
