@@ -953,7 +953,6 @@ body.lp-template5 .brand {
 }
 body.lp-template5 .brand-icon {
   border: 2px solid var(--t7-neon) !important;
-  background: rgba(115,255,56,.10) !important;
 }
 body.lp-template5 .main-nav > a,
 body.lp-template5 .main-nav-dropdown-toggle {
