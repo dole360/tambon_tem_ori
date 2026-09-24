@@ -97,6 +97,24 @@
 
   function applyInitial(){
     activeTemplate=templateName();
+    function adoptCritical(data){
+      if(!data) return false;
+      var t=templateName(data.template||activeTemplate);
+      if(t!==activeTemplate) return false;
+      var cfg=normalizeConfig(data.hero||{configured:false,template:t});
+      committed=clone(cfg);
+      if(cfg.configured) writeCache(t,cfg); else clearCache(t);
+      applyConfig(cfg);
+      return true;
+    }
+    if(adoptCritical(window.LP360_UI_CRITICAL_DATA)) return;
+    if(window.LP360_UI_CRITICAL_PROMISE && typeof window.LP360_UI_CRITICAL_PROMISE.then==='function'){
+      window.LP360_UI_CRITICAL_PROMISE.then(function(data){
+        activeTemplate=templateName();
+        adoptCritical(data);
+      }).catch(function(e){console.warn('hero critical setting:',e);});
+      return;
+    }
     var cached=readCache(activeTemplate);
     if(cached){ committed=normalizeConfig(cached); applyConfig(committed); }
     fetchSetting(activeTemplate).catch(function(e){console.warn('hero content setting:',e);});

@@ -10,6 +10,31 @@
   var current = 1;
   var committed = 1;
   var pending = 1;
+  var applyGeneration = 0;
+  var lastCssReady = Promise.resolve();
+  var bootStyleId = 'lp360UiCriticalBootStyle';
+
+  function startCriticalBoot(){
+    try {
+      document.documentElement.classList.add('lp360-ui-critical-booting');
+      if(!document.getElementById(bootStyleId)){
+        var st=document.createElement('style');
+        st.id=bootStyleId;
+        st.textContent='html.lp360-ui-critical-booting body{visibility:hidden!important}';
+        (document.head||document.documentElement).appendChild(st);
+      }
+    } catch (_) {}
+  }
+  function revealCriticalBoot(){
+    var run=function(){
+      try { document.documentElement.classList.remove('lp360-ui-critical-booting'); } catch (_) {}
+      var st=document.getElementById(bootStyleId);
+      if(st) st.remove();
+    };
+    if('requestAnimationFrame' in window) requestAnimationFrame(function(){requestAnimationFrame(run);});
+    else setTimeout(run,0);
+  }
+  startCriticalBoot();
 
   function normalize(value){
     var m = String(value == null ? '' : value).match(/(\d+)/);
@@ -72,11 +97,18 @@
     document.querySelectorAll('script[data-lp-template-script]').forEach(function(s){ s.remove(); });
   }
   function loadCss(n){
-    if(n===1) return;
+    if(n===1){ lastCssReady=Promise.resolve(); return; }
     var link=document.createElement('link');
     link.id='lpDynamicTemplateCss';
     link.rel='stylesheet';
     link.href='template'+n+'.css?v=20260924-switcher-ui-2';
+    lastCssReady=new Promise(function(resolve){
+      var done=false;
+      function finish(){ if(done)return; done=true; resolve(); }
+      link.addEventListener('load',finish,{once:true});
+      link.addEventListener('error',finish,{once:true});
+      setTimeout(finish,2500);
+    });
     document.head.appendChild(link);
   }
   function loadThemeJs(n){
@@ -90,6 +122,7 @@
     var n=normalize(value);
     options=options||{};
     current=n;
+    var generation=++applyGeneration;
     cleanupDecorations();
     removeThemeAssets();
     loadCss(n);
@@ -98,6 +131,7 @@
       loadThemeJs(n);
     }else{
       document.addEventListener('DOMContentLoaded',function(){
+        if(generation!==applyGeneration || current!==n) return;
         setBodyClass(n);
         loadThemeJs(n);
       },{once:true});
@@ -122,6 +156,89 @@
     if(!result || result.success===false) throw new Error(result && result.message || 'โหลด Template ไม่สำเร็จ');
     return normalize((result.data && result.data.template) || result.template || 'Template1');
   }
+  function heroCacheKey(t){
+    return 'LP360:HERO_CONTENT:'+site+':'+encodeURIComponent(api||location.origin)+':Template'+normalize(t);
+  }
+  function readHeroCache(t){
+    try { var raw=localStorage.getItem(heroCacheKey(t)); return raw?JSON.parse(raw):null; }
+    catch (_) { return null; }
+  }
+  function writeHeroCache(t,cfg){
+    try {
+      if(cfg && cfg.configured!==false) localStorage.setItem(heroCacheKey(t),JSON.stringify(cfg));
+      else localStorage.removeItem(heroCacheKey(t));
+    } catch (_) {}
+  }
+  function clearHeroInline(){
+    var b=document.querySelector('#home .hero-content');
+    var els=[document.getElementById('heroTitleText'),document.getElementById('heroKickerText'),document.getElementById('heroDescriptionText')];
+    if(b) ['position','left','top','width','max-width','margin','transform','box-sizing','display'].forEach(function(p){b.style.removeProperty(p);});
+    els.forEach(function(el){ if(el) ['font-size','text-align','color','width','max-width'].forEach(function(p){el.style.removeProperty(p);}); });
+  }
+  function applyCriticalHero(cfg,n){
+    if(!isIndexPage()) return Promise.resolve();
+    return new Promise(function(resolve){
+      var run=function(){
+        var b=document.querySelector('#home .hero-content');
+        if(!b){ resolve(); return; }
+        if(!cfg || cfg.configured===false){ clearHeroInline(); resolve(); return; }
+        function imp(el,p,v){ if(el) el.style.setProperty(p,String(v),'important'); }
+        function clamp(v,min,max,fallback){ v=Number(v); if(!isFinite(v))v=fallback; return Math.max(min,Math.min(max,v)); }
+        var x=clamp(cfg.xPct,0,98,5), y=clamp(cfg.yPct,0,98,20), w=clamp(cfg.widthPct,20,100,55);
+        var ts=clamp(cfg.titleSize,12,140,56), ks=clamp(cfg.kickerSize,8,56,12), ds=clamp(cfg.descriptionSize,9,72,16);
+        var align=['left','center','right'].indexOf(String(cfg.align))>=0?String(cfg.align):'left';
+        var visible=!(cfg.visible===false || String(cfg.visible)==='false' || String(cfg.visible)==='0');
+        imp(b,'position','absolute'); imp(b,'left',x+'%'); imp(b,'top',y+'%'); imp(b,'width',w+'%');
+        imp(b,'max-width','none'); imp(b,'margin','0'); imp(b,'transform','none'); imp(b,'box-sizing','border-box');
+        if(visible) b.style.removeProperty('display'); else imp(b,'display','none');
+        [
+          [document.getElementById('heroTitleText'),ts,cfg.titleColor||'#ffffff'],
+          [document.getElementById('heroKickerText'),ks,cfg.kickerColor||'#ffffff'],
+          [document.getElementById('heroDescriptionText'),ds,cfg.descriptionColor||'#ffffff']
+        ].forEach(function(a){ var el=a[0]; if(!el)return; imp(el,'font-size',a[1]+'px'); imp(el,'text-align',align); imp(el,'color',a[2]); imp(el,'width','100%'); imp(el,'max-width','none'); });
+        resolve();
+      };
+      if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',run,{once:true}); else run();
+    });
+  }
+  async function fetchCriticalUi(){
+    var fallbackTemplate=committed;
+    var fallbackHero=readHeroCache(fallbackTemplate);
+    if(!api){
+      await lastCssReady; await applyCriticalHero(fallbackHero,fallbackTemplate); revealCriticalBoot();
+      return {template:'Template'+fallbackTemplate,hero:fallbackHero,source:'cache'};
+    }
+    try{
+      var sep=api.indexOf('?')===-1?'?':'&';
+      var criticalUrl=api+sep+'mode=uicritical&_ts='+Date.now();
+      var response=await Promise.race([
+        fetch(criticalUrl,{cache:'no-store'}),
+        new Promise(function(_,reject){setTimeout(function(){reject(new Error('UI setting timeout'));},3500);})
+      ]);
+      if(!response.ok) throw new Error('HTTP '+response.status);
+      var result=await response.json();
+      if(!result || result.success===false) throw new Error(result&&result.message||'โหลด UI setting ไม่สำเร็จ');
+      var data=result.data||result;
+      var n=normalize(data.template || (data.templateSetting&&data.templateSetting.template) || 'Template1');
+      var hero=data.hero || data.heroContent || null;
+      committed=n; pending=n; writeCache(n); markChecked();
+      applyTemplate(n,{cache:false});
+      writeHeroCache(n,hero);
+      window.LP360_UI_CRITICAL_DATA={template:'Template'+n,hero:hero||{configured:false,template:'Template'+n},source:'server'};
+      await lastCssReady;
+      await applyCriticalHero(window.LP360_UI_CRITICAL_DATA.hero,n);
+      revealCriticalBoot();
+      return window.LP360_UI_CRITICAL_DATA;
+    }catch(err){
+      console.warn('critical ui setting:',err);
+      await lastCssReady;
+      await applyCriticalHero(fallbackHero,fallbackTemplate);
+      window.LP360_UI_CRITICAL_DATA={template:'Template'+fallbackTemplate,hero:fallbackHero||{configured:false,template:'Template'+fallbackTemplate},source:'cache',error:String(err&&err.message||err)};
+      revealCriticalBoot();
+      return window.LP360_UI_CRITICAL_DATA;
+    }
+  }
+
   async function fetchServerTemplate(){
     if(!api) return committed;
     var sep=api.indexOf('?')===-1?'?':'&';
@@ -160,21 +277,7 @@
   pending=committed;
   current=committed;
   applyTemplate(committed,{cache:false});
-
-  function scheduleRefresh(){
-    var age=Date.now()-readCheckedAt();
-    if(age>=0 && age<60000) return;
-    var run=function(){ fetchServerTemplate().catch(function(err){ console.warn('template setting:',err); }); };
-    if(readCheckedAt()===0){
-      run();
-    }else if('requestIdleCallback' in window){
-      requestIdleCallback(run,{timeout:1800});
-    }else{
-      setTimeout(run,500);
-    }
-  }
-  if(document.readyState==='complete') scheduleRefresh();
-  else window.addEventListener('load',scheduleRefresh,{once:true});
+  window.LP360_UI_CRITICAL_PROMISE=fetchCriticalUi();
 
   function setupAdminUi(){
     var modal=document.getElementById('templateSwitcherModal');
