@@ -496,3 +496,25 @@ body.lp-template9 .site-footer{background:#32343a!important;border-top:5px solid
   body.lp-template9 #websiteHeroOverlay.hero-overlay{width:90%!important;height:300px!important}
   body.lp-template9 #websiteHeroOverlay .hero-image-progress-wrap{bottom:28px!important}
 }
+
+/* Keep the learning sections full width while centering their content. */
+body.lp-template9 main > section#learningSourceBox,
+body.lp-template9 main > section#learningBaseModule {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+body.lp-template9 main > section#learningSourceBox > .container,
+body.lp-template9 main > section#learningBaseModule > .container {
+  width: min(var(--t12-max), calc(100% - 40px)) !important;
+  max-width: var(--t12-max) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}

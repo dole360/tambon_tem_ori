@@ -479,3 +479,25 @@ body.lp-template6 .site-footer a{color:#fff!important}
   body.lp-template6 :is(.course-page,.report-page,.reward-page,.media-page,.innovation-page,.bp-page,.about-page,.users-page,.plan-page,.fb-page){padding:18px 8px 44px!important}
   body.lp-template6 :is(.course-heading,.report-heading,.reward-heading,.media-heading,.innovation-heading,.bp-heading,.about-heading,.users-heading,.plan-heading,.fb-heading){padding:23px 18px!important}
 }
+
+/* Keep the learning sections full width while centering their content. */
+body.lp-template6 main > section#learningSourceBox,
+body.lp-template6 main > section#learningBaseModule {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+body.lp-template6 main > section#learningSourceBox > .container,
+body.lp-template6 main > section#learningBaseModule > .container {
+  width: min(var(--t9-max), calc(100% - 32px)) !important;
+  max-width: var(--t9-max) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}

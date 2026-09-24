@@ -811,3 +811,25 @@ body.lp-template7 .site-footer a{color:#fff!important}
   body.lp-template7 .nav-profile-actions .profile-cart-btn{display:none!important}
   body.lp-template7 .site-header .brand{max-width:72%!important}
 }
+
+/* Keep the learning sections full width while centering their content. */
+body.lp-template7 main > section#learningSourceBox,
+body.lp-template7 main > section#learningBaseModule {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+body.lp-template7 main > section#learningSourceBox > .container,
+body.lp-template7 main > section#learningBaseModule > .container {
+  width: min(var(--t10-max), calc(100% - 32px)) !important;
+  max-width: var(--t10-max) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}

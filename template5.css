@@ -847,7 +847,7 @@ body.lp-template5 .mobile-bottom-link:hover { color: var(--t7-orange) !important
 @media (max-width: 900px) {
   body.lp-template5 .site-header { position: sticky; }
   body.lp-template5 .brand { min-width: 0; background: transparent !important; color: var(--t7-orange) !important; padding: 10px 6px !important; }
-  body.lp-template5 .brand-icon { border-color: var(--t7-orange) !important; }
+  body.lp-template5 .brand-icon { border-color: var(--t7-orange) !important; background-color: rgba(239,69,29,.10) !important; }
   body.lp-template5 #home.hero,
   body.lp-template5 .hero { min-height: 470px; height: 62vh; }
   body.lp-template5 .hero-content { padding: 72px 28px 84px !important; }
@@ -953,6 +953,7 @@ body.lp-template5 .brand {
 }
 body.lp-template5 .brand-icon {
   border: 2px solid var(--t7-neon) !important;
+  background: rgba(115,255,56,.10) !important;
 }
 body.lp-template5 .main-nav > a,
 body.lp-template5 .main-nav-dropdown-toggle {
@@ -1421,4 +1422,26 @@ body.lp-template5 .site-footer a:hover { color:var(--t7-neon) !important; }
   body.lp-template5 #userBox,
   body.lp-template5 #learningSourceBox,
   body.lp-template5 #learningBaseModule { width:calc(100% - 20px) !important; }
+}
+
+/* Keep the learning sections full width while centering their content. */
+body.lp-template5 main > section#learningSourceBox,
+body.lp-template5 main > section#learningBaseModule {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+body.lp-template5 main > section#learningSourceBox > .container,
+body.lp-template5 main > section#learningBaseModule > .container {
+  width: min(var(--t7-max), calc(100% - 32px)) !important;
+  max-width: var(--t7-max) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
