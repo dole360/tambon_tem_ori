@@ -386,6 +386,8 @@
   <link rel="stylesheet" href="template-switcher.css?v=20260924-ui-3">
   <script>window.LP360_TEMPLATE_SITE="tambon";window.LP360_TEMPLATE_ADMIN_TOKEN_KEY="LP360:TAMBOL:mysiteAdminToken";</script>
   <script src="template-switcher.js?v=20260924-popup-template1-v2"></script>
+  <link id="templateColorStyle" rel="stylesheet" href="template-color.css?v=20260924-1">
+  <script defer src="template-color.js?v=20260924-1"></script>
   <link rel="stylesheet" href="hero-content-editor.css?v=20260924-tight-autosize-1">
   <script defer src="hero-content-editor.js?v=20260924-tight-autosize-1"></script>
   <link id="lpSweetAlertTemplate1Css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -557,6 +559,7 @@
         <button class="editwebsite-btn" type="button" data-editwebsite="text"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>แก้ไขข้อความ</button>
         <button class="editwebsite-btn" type="button" data-editwebsite="image"><i class="fa-solid fa-image" aria-hidden="true"></i>แก้ไขโลโก้ ชื่อ รูปหัวเว็บไซต์</button>
         <button id="heroContentEditorButton" class="editwebsite-btn admin-only" type="button"><i class="fa-solid fa-up-down-left-right" aria-hidden="true"></i>จัดการข้อความ Header</button>
+        <button id="templateColorButton" class="editwebsite-btn admin-only" type="button" aria-haspopup="dialog" aria-controls="templateColorDialog"><i class="fa-solid fa-palette" aria-hidden="true"></i>ธีมสี</button>
       </div>
       <div class="container hero-content">
         <div id="heroKickerText" class="eyebrow" hidden></div>
@@ -1376,6 +1379,14 @@
   <script defer src="readbook-box.js?v=20260919-readbook-1"></script>
   <button id="templateSwitcherButton" class="admin-only template-switcher-fixed-button" type="button" aria-haspopup="dialog" aria-controls="templateSwitcherModal"><i class="fa-solid fa-palette" aria-hidden="true"></i>เปลี่ยน Template</button>
 
+  <div id="templateColorDialog" hidden role="presentation">
+    <div class="template-color-panel" role="dialog" aria-modal="true" aria-labelledby="templateColorTitle">
+      <div class="template-color-head"><h2 id="templateColorTitle">เลือกธีมสี</h2><button class="template-color-close" type="button" aria-label="ปิด">×</button></div>
+      <div class="template-color-grid" aria-label="ธีมสี 5 แบบ"></div>
+      <div class="template-color-status" role="status" aria-live="polite"></div>
+      <div class="template-color-actions"><button class="template-color-cancel" type="button">ยกเลิก</button><button class="template-color-save" type="button">บันทึกธีมสี</button></div>
+    </div>
+  </div>
   <div id="templateSwitcherModal" class="template-switcher-modal" hidden aria-hidden="true">
     <div class="template-switcher-dialog" role="dialog" aria-modal="false" aria-labelledby="templateSwitcherTitle">
       <div class="template-switcher-head">
