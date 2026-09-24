@@ -204,8 +204,8 @@
   function clearHeroInline(){
     var b=document.querySelector('#home .hero-content');
     var els=[document.getElementById('heroTitleText'),document.getElementById('heroKickerText'),document.getElementById('heroDescriptionText')];
-    if(b) ['position','left','top','width','max-width','margin','transform','box-sizing','display'].forEach(function(p){b.style.removeProperty(p);});
-    els.forEach(function(el){ if(el) ['font-size','text-align','color','width','max-width'].forEach(function(p){el.style.removeProperty(p);}); });
+    if(b){ b.classList.remove('lp-hero-content-managed'); ['position','left','top','width','max-width','min-width','min-height','height','margin','padding','transform','box-sizing','display','flex-direction','align-items','gap','overflow'].forEach(function(p){b.style.removeProperty(p);}); }
+    els.forEach(function(el){ if(el) ['font-size','text-align','color','width','max-width','margin','white-space','overflow-wrap','word-break'].forEach(function(p){el.style.removeProperty(p);}); });
   }
   function applyCriticalHero(cfg,n){
     if(!isIndexPage()) return Promise.resolve();
@@ -216,18 +216,19 @@
         if(!cfg || cfg.configured===false){ clearHeroInline(); resolve(); return; }
         function imp(el,p,v){ if(el) el.style.setProperty(p,String(v),'important'); }
         function clamp(v,min,max,fallback){ v=Number(v); if(!isFinite(v))v=fallback; return Math.max(min,Math.min(max,v)); }
-        var x=clamp(cfg.xPct,0,98,5), y=clamp(cfg.yPct,0,98,20), w=clamp(cfg.widthPct,20,100,55);
+        var x=clamp(cfg.xPct,0,98,5), y=clamp(cfg.yPct,0,98,20);
         var ts=clamp(cfg.titleSize,12,140,56), ks=clamp(cfg.kickerSize,8,56,12), ds=clamp(cfg.descriptionSize,9,72,16);
         var align=['left','center','right'].indexOf(String(cfg.align))>=0?String(cfg.align):'left';
         var visible=!(cfg.visible===false || String(cfg.visible)==='false' || String(cfg.visible)==='0');
-        imp(b,'position','absolute'); imp(b,'left',x+'%'); imp(b,'top',y+'%'); imp(b,'width',w+'%');
-        imp(b,'max-width','none'); imp(b,'margin','0'); imp(b,'transform','none'); imp(b,'box-sizing','border-box');
-        if(visible) b.style.removeProperty('display'); else imp(b,'display','none');
+        b.classList.add('lp-hero-content-managed');
+        imp(b,'position','absolute'); imp(b,'left',x+'%'); imp(b,'top',y+'%'); imp(b,'width','max-content');
+        imp(b,'max-width',Math.max(2,100-x)+'%'); imp(b,'min-width','0'); imp(b,'min-height','0'); imp(b,'height','auto'); imp(b,'margin','0'); imp(b,'padding','0'); imp(b,'transform','none'); imp(b,'box-sizing','border-box'); imp(b,'overflow','visible');
+        if(visible){ imp(b,'display','flex'); imp(b,'flex-direction','column'); imp(b,'align-items','stretch'); imp(b,'gap','8px'); } else imp(b,'display','none');
         [
           [document.getElementById('heroTitleText'),ts,cfg.titleColor||'#ffffff'],
           [document.getElementById('heroKickerText'),ks,cfg.kickerColor||'#ffffff'],
           [document.getElementById('heroDescriptionText'),ds,cfg.descriptionColor||'#ffffff']
-        ].forEach(function(a){ var el=a[0]; if(!el)return; imp(el,'font-size',a[1]+'px'); imp(el,'text-align',align); imp(el,'color',a[2]); imp(el,'width','100%'); imp(el,'max-width','none'); });
+        ].forEach(function(a){ var el=a[0]; if(!el)return; imp(el,'font-size',a[1]+'px'); imp(el,'text-align',align); imp(el,'color',a[2]); imp(el,'width','100%'); imp(el,'max-width','100%'); imp(el,'margin','0'); imp(el,'white-space','pre-line'); imp(el,'overflow-wrap','break-word'); imp(el,'word-break','normal'); });
         var tt=document.getElementById('heroTitleText'), kk=document.getElementById('heroKickerText');
         if(tt){ if(String(cfg.titleWeight||'')==='bold'||String(cfg.titleWeight||'')==='normal') imp(tt,'font-weight',cfg.titleWeight); if(String(cfg.titleStyle||'')==='italic'||String(cfg.titleStyle||'')==='normal') imp(tt,'font-style',cfg.titleStyle); }
         if(kk) imp(kk,'justify-content',align==='center'?'center':(align==='right'?'flex-end':'flex-start'));
