@@ -147,7 +147,7 @@
     var link=document.createElement('link');
     link.id='lpDynamicTemplateCss';
     link.rel='stylesheet';
-    link.href='template'+n+'.css?v=20260924-template9-home-v1';
+    link.href='template'+n+'.css?v=20260924-template9-orange-v2';
     lastCssReady=new Promise(function(resolve){
       var done=false;
       function finish(){ if(done)return; done=true; resolve(); }
@@ -163,7 +163,7 @@
   function loadThemeJs(n){
     if(!JS_TEMPLATES[n] || !isIndexPage()) return;
     var script=document.createElement('script');
-    script.src='template'+n+'.js?v=20260924-template9-home-v1';
+    script.src='template'+n+'.js?v=20260924-template9-orange-v2';
     script.setAttribute('data-lp-template-script','Template'+n);
     (document.body || document.head).appendChild(script);
   }
