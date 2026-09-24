@@ -59,9 +59,7 @@ body.lp-template3 .announcement-content {
   max-width: var(--t3-max);
   margin: 12px auto 0 !important;
   min-height: 38px;
-  border: 1px solid rgba(255,255,255,.32);
   border-radius: 999px;
-  background: rgba(32,37,43,.93) !important;
   color: #fff !important;
   box-shadow: 0 10px 26px rgba(30,30,30,.15);
 }
