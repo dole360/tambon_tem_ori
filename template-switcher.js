@@ -198,7 +198,7 @@
     var currentLabel=document.getElementById('templateSwitcherCurrent');
     if(currentLabel) currentLabel.textContent='Template'+committed;
     var saveBtn=document.getElementById('templateSwitcherSave');
-    if(saveBtn) saveBtn.disabled=(pending===committed);
+    if(saveBtn) saveBtn.disabled=savingTemplate || (pending===committed);
   }
   function parseServerResult(result){
     if(!result || result.success===false) throw new Error(result && result.message || 'โหลด Template ไม่สำเร็จ');
@@ -354,6 +354,14 @@
     var status=modal.querySelector('.template-switcher-status');
     if(!grid || !closeBtn || !cancelBtn || !saveBtn || !status) return;
 
+    var savingTemplate=false;
+    function setTemplateSaving(value){
+      savingTemplate=value; saveBtn.classList.toggle('is-saving',value);
+      saveBtn.setAttribute('aria-busy',value?'true':'false');
+      saveBtn.disabled=value || pending===committed;
+      cancelBtn.disabled=value; closeBtn.disabled=value;
+      grid.querySelectorAll('button').forEach(function(x){x.disabled=value;});
+    }
     grid.innerHTML='';
     VALID.forEach(function(n){
       var b=document.createElement('button');
@@ -383,6 +391,12 @@
       openBtn.hidden=true;
     }
     function closeWithoutSave(){
+      if(savingTemplate) return;
+      if(pending!==committed){
+        status.className='template-switcher-status is-preview';
+        status.textContent='กรุณาบันทึก Template ก่อนปิดหน้าต่าง';
+        return;
+      }
       pending=committed;
       applyTemplate(committed,{cache:true});
       modal.hidden=true;
@@ -403,6 +417,7 @@
     });
 
     saveBtn.addEventListener('click',async function(){
+      if(savingTemplate) return;
       var chosen=pending;
       if(chosen===committed){
         status.className='template-switcher-status is-success';
@@ -412,10 +427,7 @@
       }
       status.className='template-switcher-status';
       status.textContent='กำลังบันทึก Template'+chosen+'...';
-      saveBtn.disabled=true;
-      cancelBtn.disabled=true;
-      closeBtn.disabled=true;
-      grid.querySelectorAll('button').forEach(function(x){x.disabled=true;});
+      setTemplateSaving(true);
       try{
         var saved=await saveServerTemplate(chosen);
         committed=saved;
@@ -426,14 +438,10 @@
         status.textContent='บันทึก Template'+saved+' แล้ว';
         setTimeout(closeAfterSave,350);
       }catch(err){
-        pending=committed;
-        applyTemplate(committed,{cache:true});
         status.className='template-switcher-status is-error';
-        status.textContent='บันทึกไม่สำเร็จ: '+err.message+' — กลับไปใช้ Template'+committed;
+        status.textContent='บันทึกไม่สำเร็จ: '+err.message+' — กรุณาลองบันทึกอีกครั้ง';
       }finally{
-        cancelBtn.disabled=false;
-        closeBtn.disabled=false;
-        grid.querySelectorAll('button').forEach(function(x){x.disabled=false;});
+        setTemplateSaving(false);
         refreshChoices();
       }
     });

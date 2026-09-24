@@ -259,6 +259,8 @@
     var overlayOpacity=document.getElementById('heroOverlayOpacity');
     var overlayModeButtons=panel.querySelectorAll('[data-hero-overlay-mode]');
 
+    var savingHero=false, unsavedHero=false;
+    function setHeroSaving(value){ savingHero=value; saveBtn.disabled=value; saveBtn.classList.toggle('is-saving',value); saveBtn.setAttribute('aria-busy',value?'true':'false'); closeBtn.disabled=value; cancelBtn.disabled=value; }
     function setStatus(text,kind){ status.textContent=text||''; status.className='hero-editor-status'+(kind?' is-'+kind:''); }
     function syncUi(){
       if(!pending)return; outputs.title.textContent=Math.round(pending.titleSize)+'px'; outputs.kicker.textContent=Math.round(pending.kickerSize)+'px'; outputs.desc.textContent=Math.round(pending.descriptionSize)+'px';
@@ -272,8 +274,9 @@
       overlayModeButtons.forEach(function(btn){btn.classList.toggle('is-active',btn.getAttribute('data-hero-overlay-mode')===pending.overlayMode);});
       eye.classList.toggle('is-off',!pending.visible); eye.innerHTML=pending.visible?'<i class="fa-solid fa-eye"></i> แสดง':'<i class="fa-solid fa-eye-slash"></i> ซ่อน';
     }
-    function preview(){ if(!pending)return; pending.configured=true; pending.template=activeTemplate; applyConfig(pending); syncUi(); setStatus('กำลังดูตัวอย่าง — กด “บันทึก” เพื่อบันทึกลงชีต',''); }
+    function preview(){ if(!pending)return; unsavedHero=true; pending.configured=true; pending.template=activeTemplate; applyConfig(pending); syncUi(); setStatus('กำลังดูตัวอย่าง — กด “บันทึก” เพื่อบันทึกลงชีต',''); }
     function open(){
+      if(savingHero || panelOpen) return;
       activeTemplate=templateName();
       var cached=readCache(activeTemplate); if(cached)committed=normalizeConfig(cached);
       pending=committed&&committed.configured?clone(committed):captureCurrent();
@@ -282,12 +285,14 @@
         if(pending.titleWeight==='template') pending.titleWeight=tc&&((parseInt(tc.fontWeight,10)||0)>=600||/bold/i.test(tc.fontWeight))?'bold':'normal';
         if(pending.titleStyle==='template') pending.titleStyle=tc&&/(italic|oblique)/i.test(tc.fontStyle)?'italic':'normal';
       }
-      pending.template=activeTemplate; panel.hidden=false; panel.setAttribute('aria-hidden','false'); panelOpen=true; document.body.classList.add('hero-content-editing'); preview();
+      pending.template=activeTemplate; unsavedHero=false; panel.hidden=false; panel.setAttribute('aria-hidden','false'); panelOpen=true; document.body.classList.add('hero-content-editing'); preview(); unsavedHero=false;
     }
     function close(revert){
+      if(savingHero) return;
+      if(revert && unsavedHero){ setStatus('กรุณาบันทึกก่อนปิดหน้าต่าง','error'); return; }
       panel.hidden=true; panel.setAttribute('aria-hidden','true'); panelOpen=false; document.body.classList.remove('hero-content-editing');
       if(revert){ if(committed&&committed.configured)applyConfig(committed); else clearCustom(); }
-      pending=null; drag=null;
+      pending=null; drag=null; unsavedHero=false;
     }
     openBtn.addEventListener('click',open); closeBtn.addEventListener('click',function(){close(true);}); cancelBtn.addEventListener('click',function(){close(true);});
     eye.addEventListener('click',function(){ if(!pending)return; pending.visible=!pending.visible; preview(); });
@@ -299,7 +304,7 @@
     if(colors.overlay) colors.overlay.addEventListener('input',function(){if(pending){pending.overlayConfigured=true;pending.overlayColor=this.value;preview();}});
     if(overlayOpacity) overlayOpacity.addEventListener('input',function(){if(pending){pending.overlayConfigured=true;pending.overlayOpacity=clamp(this.value,0,100);preview();}});
     overlayModeButtons.forEach(function(btn){btn.addEventListener('click',function(){if(!pending)return; pending.overlayConfigured=true; pending.overlayMode=btn.getAttribute('data-hero-overlay-mode')||'uniform'; preview();});});
-    saveBtn.addEventListener('click',async function(){ if(!pending)return; saveBtn.disabled=true; setStatus('กำลังบันทึก...',''); try{ var saved=await saveSetting(pending); committed=clone(saved); pending=clone(saved); writeCache(activeTemplate,saved); applyConfig(saved); syncUi(); setStatus('บันทึกข้อความ Header เรียบร้อย','ok'); setTimeout(function(){close(false);},550); }catch(e){setStatus('บันทึกไม่สำเร็จ: '+(e.message||e),'error');}finally{saveBtn.disabled=false;} });
+    saveBtn.addEventListener('click',async function(){ if(!pending || savingHero)return; setHeroSaving(true); setStatus('กำลังบันทึก...',''); try{ var saved=await saveSetting(pending); committed=clone(saved); pending=clone(saved); writeCache(activeTemplate,saved); applyConfig(saved); syncUi(); unsavedHero=false; setStatus('บันทึกข้อความ Header เรียบร้อย','ok'); setTimeout(function(){close(false);},550); }catch(e){setStatus('บันทึกไม่สำเร็จ: '+(e.message||e),'error');}finally{setHeroSaving(false);} });
 
     var b=box(); if(b){
       b.addEventListener('pointerdown',function(e){ if(!panelOpen||!pending||!pending.visible||e.button!==0)return; var h=hero(); if(!h)return; var hr=h.getBoundingClientRect(), br=b.getBoundingClientRect(); drag={id:e.pointerId,startX:e.clientX,startY:e.clientY,left:br.left-hr.left,top:br.top-hr.top,width:br.width,height:br.height}; b.setPointerCapture&&b.setPointerCapture(e.pointerId); b.classList.add('hero-content-dragging'); e.preventDefault(); });
@@ -313,6 +318,7 @@
 
   window.addEventListener('lp360:templatechange',function(e){
     var next=templateName(e&&e.detail&&e.detail.template); activeTemplate=next;
+    if(panelOpen && (savingHero || unsavedHero)) return;
     if(panelOpen){ var p=document.getElementById('heroContentEditorPanel'); if(p)p.hidden=true; panelOpen=false; document.body.classList.remove('hero-content-editing'); pending=null; }
     var cached=readCache(next); committed=cached?normalizeConfig(cached):{configured:false,template:next}; applyConfig(committed);
     setTimeout(function(){fetchSetting(next).catch(function(err){console.warn('hero content setting:',err);});},40);

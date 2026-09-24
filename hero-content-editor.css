@@ -101,3 +101,6 @@ body.hero-content-editing #home.hero .hero-content{min-height:0!important;height
   white-space:pre-line!important;overflow-wrap:break-word!important;word-break:normal!important
 }
 body.hero-content-editing #home.hero .hero-content.lp-hero-content-managed{padding:0!important}
+
+#heroContentEditorSave.is-saving::before{content:"";display:inline-block!important;width:13px!important;height:13px!important;margin-right:7px!important;border:2px solid currentColor!important;border-right-color:transparent!important;border-radius:50%!important;vertical-align:-2px!important;animation:lp360-save-spin .7s linear infinite!important}
+@keyframes lp360-save-spin{to{transform:rotate(360deg)}}
