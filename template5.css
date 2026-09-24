@@ -695,7 +695,7 @@ body.lp-template5 .profile-page {
     radial-gradient(circle at 92% 0, rgba(242,169,21,.08), transparent 24rem),
     #fbfaf7;
 }
-body.lp-template5 [class$="-container"] {
+body.lp-template5 [class$="-container"]:not(.swal2-container) {
   max-width: var(--t7-max);
 }
 body.lp-template5 .course-heading,

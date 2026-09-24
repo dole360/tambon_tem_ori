@@ -126,12 +126,27 @@
   }
   ensureStickyHeaderStyle();
 
+  function ensurePopupTemplate1Style(){
+    var link=document.getElementById('lpPopupTemplate1Style');
+    if(!link){
+      link=document.createElement('link');
+      link.id='lpPopupTemplate1Style';
+      link.rel='stylesheet';
+      link.href='popup-template1-lock.css?v=20260924-popup-template1-v2';
+    }
+    /* Keep this as the final visual layer. Broad Template selectors must never
+       turn SweetAlert/admin popups into normal page content. */
+    if(document.head) document.head.appendChild(link);
+    return link;
+  }
+  ensurePopupTemplate1Style();
+
   function loadCss(n){
-    if(n===1){ ensureUnifiedAdminStyle(); ensureStickyHeaderStyle(); lastCssReady=Promise.resolve(); return; }
+    if(n===1){ ensureUnifiedAdminStyle(); ensureStickyHeaderStyle(); ensurePopupTemplate1Style(); lastCssReady=Promise.resolve(); return; }
     var link=document.createElement('link');
     link.id='lpDynamicTemplateCss';
     link.rel='stylesheet';
-    link.href='template'+n+'.css?v=20260924-popup-template1-1';
+    link.href='template'+n+'.css?v=20260924-popup-template1-v2';
     lastCssReady=new Promise(function(resolve){
       var done=false;
       function finish(){ if(done)return; done=true; resolve(); }
@@ -142,11 +157,12 @@
     document.head.appendChild(link);
     ensureUnifiedAdminStyle();
     ensureStickyHeaderStyle();
+    ensurePopupTemplate1Style();
   }
   function loadThemeJs(n){
     if(!JS_TEMPLATES[n] || !isIndexPage()) return;
     var script=document.createElement('script');
-    script.src='template'+n+'.js?v=20260924-popup-template1-1';
+    script.src='template'+n+'.js?v=20260924-popup-template1-v2';
     script.setAttribute('data-lp-template-script','Template'+n);
     (document.body || document.head).appendChild(script);
   }
