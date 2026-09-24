@@ -23,17 +23,39 @@
 #templateColorDialog .template-color-save{background:#2563eb!important;color:#fff!important;border:1px solid #2563eb!important}
 #templateColorDialog .template-color-save.is-saving::before{content:"";display:inline-block;width:12px;height:12px;border:2px solid white;border-right-color:transparent;border-radius:50%;margin-right:7px;animation:lpcolor-spin .7s linear infinite}
 @keyframes lpcolor-spin{to{transform:rotate(360deg)}}
-/* Palette 1 leaves each Template's original styling intact. Other palettes recolor primary UI surfaces only. */
-body.lp-color-themed{--t6-orange:var(--lp-color-primary);--t6-gold:var(--lp-color-secondary);--t9-aqua:var(--lp-color-secondary);--t10-aqua:var(--lp-color-secondary);--t12-deep:var(--lp-color-primary);--t12-deep-2:var(--lp-color-dark);--t12-teal:var(--lp-color-primary);--t12-emerald:var(--lp-color-secondary);--t12-lime:var(--lp-color-secondary);--t12-lime-2:var(--lp-color-secondary)}
-body.lp-color-themed .announcement,body.lp-color-themed .announcement-bar{background:var(--lp-color-dark)!important}
-body.lp-color-themed #home.hero{background:linear-gradient(115deg,var(--lp-color-dark),var(--lp-color-primary),var(--lp-color-secondary))!important}
-body.lp-color-themed.lp-template9 #home.hero{background:var(--lp-color-soft)!important}
-body.lp-color-themed .site-header .brand,body.lp-color-themed .main-nav>a:hover,body.lp-color-themed .main-nav-dropdown-toggle:hover{color:var(--lp-color-primary)!important}
-body.lp-color-themed #home #heroKickerText{color:var(--lp-color-secondary)!important}
-body.lp-color-themed.lp-template9 #home #heroKickerText{background:var(--lp-color-soft)!important;color:var(--lp-color-primary)!important}
-body.lp-color-themed .section-title strong,body.lp-color-themed .section-heading h2 strong{color:var(--lp-color-primary)!important}
-body.lp-color-themed #home.hero::before,body.lp-color-themed #home.hero::after{background-color:var(--lp-color-secondary)!important}
-body.lp-color-themed .cliproom-open-all,body.lp-color-themed .readbook-open-all,body.lp-color-themed .shopactivity-open-all,body.lp-color-themed .primary-button,body.lp-color-themed .btn-primary,body.lp-color-themed .view-all-button,body.lp-color-themed .student-service-open,body.lp-color-themed .nav-profile-actions>button{background:var(--lp-color-primary)!important;border-color:var(--lp-color-primary)!important;color:#fff!important}
-body.lp-color-themed .home-summary-icon,body.lp-color-themed .student-services-box,body.lp-color-themed #buttonsection{background:var(--lp-color-soft)!important}
-body.lp-color-themed .home-summary-number,body.lp-color-themed .team-card-name{color:var(--lp-color-primary)!important}
-body.lp-color-themed .site-footer{border-top-color:var(--lp-color-primary)!important}
+/* Palette 1 preserves each Template's original design. Other palettes change only three areas. */
+body.lp-color-themed{
+  background-color:var(--lp-color-soft)!important;
+}
+/* 1. Announcement */
+body.lp-color-themed .announcement,
+body.lp-color-themed .announcement-bar,
+body.lp-color-themed #announcementBar{
+  background:var(--lp-color-dark)!important;
+  color:#fff!important;
+}
+body.lp-color-themed .announcement #announcementText,
+body.lp-color-themed .announcement .brand,
+body.lp-color-themed .announcement .brand-light{
+  color:#fff!important;
+}
+/* 2. Site header, including its text so it remains legible. */
+body.lp-color-themed .site-header{
+  background:var(--lp-color-primary)!important;
+  border-color:var(--lp-color-primary)!important;
+}
+body.lp-color-themed .site-header .brand,
+body.lp-color-themed .site-header .main-nav>a,
+body.lp-color-themed .site-header .main-nav-dropdown-toggle{
+  color:#fff!important;
+  text-shadow:none!important;
+}
+body.lp-color-themed .site-header .main-nav>a:hover,
+body.lp-color-themed .site-header .main-nav-dropdown-toggle:hover{
+  background:rgba(255,255,255,.16)!important;
+  color:#fff!important;
+}
+/* 3. Page background. Preserve the sheet image and existing hero overlay. */
+body.lp-color-themed #home.hero{
+  background-color:var(--lp-color-soft)!important;
+}
