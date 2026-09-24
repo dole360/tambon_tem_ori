@@ -1,0 +1,44 @@
+/* Learning Platform 360 — Template Switcher
+   Admin UI only. Does not change business/data logic. */
+#templateSwitcherModal[hidden]{display:none!important}
+#templateSwitcherModal{
+  position:fixed!important;inset:0!important;z-index:69000!important;
+  display:flex;align-items:center;justify-content:center;
+  padding:18px;background:rgba(9,18,28,.68);backdrop-filter:blur(6px);
+}
+#templateSwitcherModal .template-switcher-dialog{
+  width:min(760px,96vw);max-height:min(88vh,820px);overflow:auto;
+  background:#fff;color:#172033;border-radius:24px;padding:22px;
+  box-shadow:0 30px 90px rgba(0,0,0,.3);position:relative;
+}
+#templateSwitcherModal .template-switcher-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px;
+}
+#templateSwitcherModal .template-switcher-title{margin:0;font-size:clamp(22px,4vw,30px);font-weight:900}
+#templateSwitcherModal .template-switcher-sub{margin:4px 0 0;color:#687386;font-size:14px}
+#templateSwitcherModal .template-switcher-close{
+  width:42px;height:42px;border:0;border-radius:999px;background:#eef2f5;color:#172033;
+  font-size:25px;line-height:1;cursor:pointer;flex:0 0 auto;
+}
+#templateSwitcherModal .template-switcher-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;
+}
+#templateSwitcherModal .template-choice{
+  border:2px solid #e5eaf0;border-radius:18px;background:#fff;padding:16px 14px;cursor:pointer;
+  text-align:left;transition:.16s ease;min-height:94px;color:#172033;
+}
+#templateSwitcherModal .template-choice:hover{transform:translateY(-2px);border-color:#5f7dff;box-shadow:0 10px 28px rgba(44,65,130,.12)}
+#templateSwitcherModal .template-choice.is-active{border-color:#16a34a;background:#f0fdf4;box-shadow:0 0 0 3px rgba(22,163,74,.10)}
+#templateSwitcherModal .template-choice strong{display:block;font-size:18px;font-weight:900}
+#templateSwitcherModal .template-choice span{display:block;margin-top:5px;color:#718096;font-size:12px}
+#templateSwitcherModal .template-switcher-status{
+  min-height:24px;margin-top:15px;font-size:14px;font-weight:700;color:#526072;
+}
+#templateSwitcherModal .template-switcher-status.is-success{color:#15803d}
+#templateSwitcherModal .template-switcher-status.is-error{color:#dc2626}
+#templateSwitcherButton{white-space:nowrap}
+@media(max-width:620px){
+  #templateSwitcherModal{padding:10px}
+  #templateSwitcherModal .template-switcher-dialog{padding:18px;border-radius:18px}
+  #templateSwitcherModal .template-switcher-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
