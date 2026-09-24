@@ -8,7 +8,8 @@
   var api = window.APP_CONFIG && (window.APP_CONFIG.EXEC_URL || window.APP_CONFIG.API_URL) || '';
   var cacheKey = 'LP360:TEMPLATE:' + site + ':' + encodeURIComponent(api || location.origin);
   var current = 1;
-  var serverKnown = false;
+  var committed = 1;
+  var pending = 1;
 
   function normalize(value){
     var m = String(value == null ? '' : value).match(/(\d+)/);
@@ -32,6 +33,10 @@
   function isIndexPage(){
     var p = String(location.pathname || '');
     return /(?:^|\/)(?:index\.html)?$/.test(p);
+  }
+  function isSwitcherOpen(){
+    var modal=document.getElementById('templateSwitcherModal');
+    return !!(modal && !modal.hidden);
   }
   function removeNode(selector){
     document.querySelectorAll(selector).forEach(function(el){ el.remove(); });
@@ -71,13 +76,13 @@
     var link=document.createElement('link');
     link.id='lpDynamicTemplateCss';
     link.rel='stylesheet';
-    link.href='template'+n+'.css?v=20260924-switcher-1';
+    link.href='template'+n+'.css?v=20260924-switcher-ui-2';
     document.head.appendChild(link);
   }
   function loadThemeJs(n){
     if(!JS_TEMPLATES[n] || !isIndexPage()) return;
     var script=document.createElement('script');
-    script.src='template'+n+'.js?v=20260924-switcher-1';
+    script.src='template'+n+'.js?v=20260924-switcher-ui-2';
     script.setAttribute('data-lp-template-script','Template'+n);
     (document.body || document.head).appendChild(script);
   }
@@ -97,9 +102,9 @@
         loadThemeJs(n);
       },{once:true});
     }
-    if(options.cache!==false) writeCache(n);
+    if(options.cache===true) writeCache(n);
     refreshChoices();
-    window.dispatchEvent(new CustomEvent('lp360:templatechange',{detail:{template:'Template'+n,number:n}}));
+    window.dispatchEvent(new CustomEvent('lp360:templatechange',{detail:{template:'Template'+n,number:n,preview:options.preview===true}}));
     return n;
   }
   function refreshChoices(){
@@ -109,22 +114,29 @@
       btn.setAttribute('aria-pressed',n===current?'true':'false');
     });
     var currentLabel=document.getElementById('templateSwitcherCurrent');
-    if(currentLabel) currentLabel.textContent='Template'+current;
+    if(currentLabel) currentLabel.textContent='Template'+committed;
+    var saveBtn=document.getElementById('templateSwitcherSave');
+    if(saveBtn) saveBtn.disabled=(pending===committed);
   }
   function parseServerResult(result){
     if(!result || result.success===false) throw new Error(result && result.message || 'โหลด Template ไม่สำเร็จ');
     return normalize((result.data && result.data.template) || result.template || 'Template1');
   }
   async function fetchServerTemplate(){
-    if(!api) return current;
+    if(!api) return committed;
     var sep=api.indexOf('?')===-1?'?':'&';
     var response=await fetch(api+sep+'mode=templatesetting&_ts='+Date.now(),{cache:'no-store'});
     if(!response.ok) throw new Error('HTTP '+response.status);
     var result=await response.json();
     var n=parseServerResult(result);
-    serverKnown=true;
-    if(n!==current) applyTemplate(n,{cache:true});
-    else writeCache(n);
+    committed=n;
+    writeCache(n);
+    if(!isSwitcherOpen()){
+      pending=n;
+      applyTemplate(n,{cache:false});
+    }else{
+      refreshChoices();
+    }
     markChecked();
     return n;
   }
@@ -144,8 +156,10 @@
     return normalize((result.data && result.data.template) || 'Template'+n);
   }
 
-  current=readCache();
-  applyTemplate(current,{cache:false});
+  committed=readCache();
+  pending=committed;
+  current=committed;
+  applyTemplate(committed,{cache:false});
 
   function scheduleRefresh(){
     var age=Date.now()-readCheckedAt();
@@ -168,60 +182,109 @@
     if(!modal || !openBtn) return;
     var grid=modal.querySelector('.template-switcher-grid');
     var closeBtn=modal.querySelector('.template-switcher-close');
+    var cancelBtn=document.getElementById('templateSwitcherCancel');
+    var saveBtn=document.getElementById('templateSwitcherSave');
     var status=modal.querySelector('.template-switcher-status');
-    var descriptions=[
-      'รูปแบบมาตรฐานเดิม','Modern Rounded','Bold Editorial','Editorial Nature',
-      'Performance Sport','Ocean Aqua','Dark Portal','Premium Green','Teal Ellipse'
-    ];
+    if(!grid || !closeBtn || !cancelBtn || !saveBtn || !status) return;
+
     grid.innerHTML='';
     VALID.forEach(function(n){
       var b=document.createElement('button');
       b.type='button';
       b.className='template-choice';
       b.setAttribute('data-template',String(n));
-      b.innerHTML='<strong>Template'+n+'</strong><span>'+descriptions[n-1]+'</span>';
-      b.addEventListener('click',async function(){
-        var previous=current;
-        var chosen=n;
-        status.className='template-switcher-status';
-        status.textContent='กำลังเปลี่ยนเป็น Template'+chosen+'...';
-        applyTemplate(chosen,{cache:true});
-        grid.querySelectorAll('button').forEach(function(x){x.disabled=true;});
-        try{
-          var saved=await saveServerTemplate(chosen);
-          if(saved!==chosen) applyTemplate(saved,{cache:true});
-          markChecked();
-          status.className='template-switcher-status is-success';
-          status.textContent='บันทึก Template'+saved+' แล้ว';
-          setTimeout(function(){ modal.hidden=true; },450);
-        }catch(err){
-          applyTemplate(previous,{cache:true});
-          status.className='template-switcher-status is-error';
-          status.textContent='บันทึกไม่สำเร็จ: '+err.message;
-        }finally{
-          grid.querySelectorAll('button').forEach(function(x){x.disabled=false;});
-        }
+      b.setAttribute('aria-label','ดูตัวอย่าง Template'+n);
+      b.innerHTML='<strong>Template'+n+'</strong>';
+      b.addEventListener('click',function(){
+        pending=n;
+        applyTemplate(n,{cache:false,preview:true});
+        status.className='template-switcher-status is-preview';
+        status.textContent='กำลังดูตัวอย่าง Template'+n+' — ยังไม่ได้บันทึก';
+        refreshChoices();
       });
       grid.appendChild(b);
     });
-    refreshChoices();
-    openBtn.addEventListener('click',function(){
+
+    function openSwitcher(){
+      pending=committed;
+      if(current!==committed) applyTemplate(committed,{cache:false});
       refreshChoices();
       status.className='template-switcher-status';
-      status.textContent='เลือก Template ที่ต้องการ เว็บไซต์จะเปลี่ยนรูปแบบทันที';
+      status.textContent='เลือก Template เพื่อดูตัวอย่าง แล้วกด “บันทึก Template”';
       modal.hidden=false;
+      modal.setAttribute('aria-hidden','false');
+      openBtn.hidden=true;
+    }
+    function closeWithoutSave(){
+      pending=committed;
+      applyTemplate(committed,{cache:true});
+      modal.hidden=true;
+      modal.setAttribute('aria-hidden','true');
+      openBtn.hidden=false;
+    }
+    function closeAfterSave(){
+      modal.hidden=true;
+      modal.setAttribute('aria-hidden','true');
+      openBtn.hidden=false;
+    }
+
+    openBtn.addEventListener('click',openSwitcher);
+    closeBtn.addEventListener('click',closeWithoutSave);
+    cancelBtn.addEventListener('click',closeWithoutSave);
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape' && !modal.hidden) closeWithoutSave();
     });
-    function close(){ modal.hidden=true; }
-    closeBtn.addEventListener('click',close);
-    modal.addEventListener('click',function(e){ if(e.target===modal) close(); });
-    document.addEventListener('keydown',function(e){ if(e.key==='Escape' && !modal.hidden) close(); });
+
+    saveBtn.addEventListener('click',async function(){
+      var chosen=pending;
+      if(chosen===committed){
+        status.className='template-switcher-status is-success';
+        status.textContent='Template'+committed+' เป็น Template ที่บันทึกอยู่แล้ว';
+        setTimeout(closeAfterSave,250);
+        return;
+      }
+      status.className='template-switcher-status';
+      status.textContent='กำลังบันทึก Template'+chosen+'...';
+      saveBtn.disabled=true;
+      cancelBtn.disabled=true;
+      closeBtn.disabled=true;
+      grid.querySelectorAll('button').forEach(function(x){x.disabled=true;});
+      try{
+        var saved=await saveServerTemplate(chosen);
+        committed=saved;
+        pending=saved;
+        applyTemplate(saved,{cache:true});
+        markChecked();
+        status.className='template-switcher-status is-success';
+        status.textContent='บันทึก Template'+saved+' แล้ว';
+        setTimeout(closeAfterSave,350);
+      }catch(err){
+        pending=committed;
+        applyTemplate(committed,{cache:true});
+        status.className='template-switcher-status is-error';
+        status.textContent='บันทึกไม่สำเร็จ: '+err.message+' — กลับไปใช้ Template'+committed;
+      }finally{
+        cancelBtn.disabled=false;
+        closeBtn.disabled=false;
+        grid.querySelectorAll('button').forEach(function(x){x.disabled=false;});
+        refreshChoices();
+      }
+    });
+
+    refreshChoices();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',setupAdminUi,{once:true});
   else setupAdminUi();
 
   window.LP360TemplateSwitcher={
     getCurrent:function(){return 'Template'+current;},
-    apply:function(n){return applyTemplate(n,{cache:true});},
+    getSaved:function(){return 'Template'+committed;},
+    apply:function(n){
+      var value=normalize(n);
+      committed=value;
+      pending=value;
+      return applyTemplate(value,{cache:true});
+    },
     refresh:fetchServerTemplate
   };
 })();
