@@ -383,9 +383,9 @@
 
   <link rel="stylesheet" href="template-switcher.css?v=20260924-ui-3">
   <script>window.LP360_TEMPLATE_SITE="tambon";window.LP360_TEMPLATE_ADMIN_TOKEN_KEY="LP360:TAMBOL:mysiteAdminToken";</script>
-  <script src="template-switcher.js?v=20260924-admin-unified-1"></script>
-  <link rel="stylesheet" href="hero-content-editor.css?v=20260924-hero-editor-2">
-  <script defer src="hero-content-editor.js?v=20260924-hero-editor-2"></script>
+  <script src="template-switcher.js?v=20260924-overlay-editor-1"></script>
+  <link rel="stylesheet" href="hero-content-editor.css?v=20260924-overlay-editor-1">
+  <script defer src="hero-content-editor.js?v=20260924-overlay-editor-1"></script>
 </head>
 <body class="website-data-loading theme-v2">
   <div id="adminLoginModal" class="admin-login-modal" hidden>
@@ -1406,6 +1406,10 @@
       <label class="hero-editor-color">Text หลัก<input id="heroTitleColor" type="color" value="#ffffff"></label>
       <label class="hero-editor-color">Text บน<input id="heroKickerColor" type="color" value="#ffffff"></label>
       <label class="hero-editor-color">TEXT ล่าง<input id="heroDescriptionColor" type="color" value="#ffffff"></label>
+    </div>
+    <div class="hero-editor-overlay-control">
+      <label class="hero-editor-overlay-color">Overlay <input id="heroOverlayColor" type="color" value="#051c2c" aria-label="สี Overlay"></label>
+      <label class="hero-editor-overlay-opacity">ความเข้ม <input id="heroOverlayOpacity" type="range" min="0" max="100" step="1" value="72"><output id="heroOverlayOpacityValue">72%</output></label>
     </div>
     <div class="hero-editor-row"><span class="hero-editor-label">การมองเห็น</span><button id="heroContentVisibility" class="hero-editor-eye" type="button"><i class="fa-solid fa-eye"></i> แสดง</button></div>
     <div class="hero-editor-note">การลาก/ปรับขนาด/สีเป็นตัวอย่างทันที แต่จะยังไม่บันทึกจนกด “บันทึก”</div>
