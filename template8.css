@@ -556,19 +556,10 @@ body.lp-template8 .team-card{
 body.lp-template8 .team-card-name{color:var(--t11-forest)!important}
 
 /* ===== admin dialogs: style only, NEVER force them open ===== */
-body.lp-template8 :is(.admin-login-modal,.learning-modal,.reward-modal,.rp-overlay,.rw-overlay,.pl-overlay,.bp-manager-overlay,.bp-manager-action-overlay,.in-manager-overlay,.in-manager-action-overlay,.md-manager-overlay,.md-manager-action-overlay,.team-manager-overlay,.team-manager-action-overlay,.team-manager-image-overlay,.newsletter-overlay,.newsletter-action-overlay,.newsletter-image-overlay,.facebook-action-overlay,.cr-overlay){
-  z-index:10050;
-}
-body.lp-template8 :is(.admin-login-card,.learning-modal-box,.reward-modal-dialog,.modal-card){
-  border:1px solid rgba(7,83,56,.13)!important;
-  border-radius:20px!important;
-  background:#fff!important;
-  box-shadow:0 28px 80px rgba(4,48,32,.28)!important;
-}
+
+
 /* honor the application's hidden state explicitly */
-body.lp-template8 .admin-login-modal[hidden],
-body.lp-template8 .learning-modal[hidden],
-body.lp-template8 .reward-modal[hidden]{display:none!important}
+
 
 /* admin banner */
 body.lp-template8 .admin-mode-banner{

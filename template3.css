@@ -807,25 +807,11 @@ body.lp-template3 :is(.login-card,.auth-card,.profile-card) {
 }
 
 /* ---------- SweetAlert / admin popups ---------- */
-body.lp-template3 .swal2-popup {
-  border: 1px solid rgba(17,20,24,.08) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 28px 70px rgba(17,20,24,.25) !important;
-}
-body.lp-template3 .swal2-title { color: var(--t3-ink) !important; font-weight: 900 !important; }
-body.lp-template3 .swal2-confirm {
-  border-radius: 7px !important;
-  background: var(--t3-amber) !important;
-  color: var(--t3-ink) !important;
-  font-weight: 800 !important;
-}
-body.lp-template3 .swal2-cancel { border-radius: 7px !important; }
-body.lp-template3 .swal2-input,
-body.lp-template3 .swal2-select,
-body.lp-template3 .swal2-textarea {
-  border-radius: 7px !important;
-  border-color: #d9dcdf !important;
-}
+
+
+
+
+
 
 /* ---------- footer ---------- */
 body.lp-template3 footer,

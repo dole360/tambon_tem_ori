@@ -817,21 +817,9 @@ body.lp-template5 .pl-file {
 }
 
 /* ---------- admin popup / SweetAlert ---------- */
-body.lp-template5 .swal2-popup,
-body.lp-template5 [class*="manager-popup"],
-body.lp-template5 [class$="-manager"],
-body.lp-template5 .rp-manager,
-body.lp-template5 .cr-manager,
-body.lp-template5 .pl-manager {
-  border-radius: 7px !important;
-}
-body.lp-template5 .swal2-confirm,
-body.lp-template5 .swal2-styled.swal2-confirm,
-body.lp-template5 [class*="-add"] {
-  background: var(--t7-orange) !important;
-}
-body.lp-template5 .swal2-cancel,
-body.lp-template5 .swal2-styled.swal2-cancel { background: #68716c !important; }
+
+
+
 body.lp-template5 [class*="-pages"] button.active,
 body.lp-template5 [class*="-pages"] button.is-active { background: var(--t7-orange) !important; color: #fff !important; }
 
@@ -1371,12 +1359,7 @@ body.lp-template5 thead th {
   letter-spacing:.04em;
 }
 body.lp-template5 tbody tr:hover { background:#f1f8ff !important; }
-body.lp-template5 .manager-modal,
-body.lp-template5 .admin-modal,
-body.lp-template5 .modal-content,
-body.lp-template5 .swal2-popup {
-  border-radius:3px !important;
-}
+
 body.lp-template5 .admin-action-edit,
 body.lp-template5 .edit-btn,
 body.lp-template5 .action-edit {

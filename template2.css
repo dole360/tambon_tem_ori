@@ -686,17 +686,11 @@ body.lp-template2 :is(.login-card,.auth-card,.profile-card,.panel,.card,.box):no
 }
 
 /* ---------- SweetAlert / admin popups ---------- */
-body.lp-template2 .swal2-popup {
-  border-radius: 24px !important;
-  box-shadow: 0 28px 70px rgba(19,45,64,.24) !important;
-}
 
-body.lp-template2 .swal2-title { color: var(--t2-ink) !important; }
-body.lp-template2 .swal2-confirm {
-  border-radius: 999px !important;
-  background: var(--t2-coral) !important;
-}
-body.lp-template2 .swal2-cancel { border-radius: 999px !important; }
+
+
+
+
 
 /* ---------- footer ---------- */
 body.lp-template2 footer,

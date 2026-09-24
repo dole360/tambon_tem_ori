@@ -817,21 +817,9 @@ body.lp-template4 .pl-file {
 }
 
 /* ---------- admin popup / SweetAlert ---------- */
-body.lp-template4 .swal2-popup,
-body.lp-template4 [class*="manager-popup"],
-body.lp-template4 [class$="-manager"],
-body.lp-template4 .rp-manager,
-body.lp-template4 .cr-manager,
-body.lp-template4 .pl-manager {
-  border-radius: 7px !important;
-}
-body.lp-template4 .swal2-confirm,
-body.lp-template4 .swal2-styled.swal2-confirm,
-body.lp-template4 [class*="-add"] {
-  background: var(--t6-orange) !important;
-}
-body.lp-template4 .swal2-cancel,
-body.lp-template4 .swal2-styled.swal2-cancel { background: #68716c !important; }
+
+
+
 body.lp-template4 [class*="-pages"] button.active,
 body.lp-template4 [class*="-pages"] button.is-active { background: var(--t6-orange) !important; color: #fff !important; }
 

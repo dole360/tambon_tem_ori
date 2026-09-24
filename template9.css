@@ -300,13 +300,9 @@ body.lp-template9 .team-card{border:1px solid #e5ece8!important;border-radius:17
 body.lp-template9 .team-card-name{color:var(--t12-deep)!important}
 
 /* admin dialogs: styling only; never force display */
-body.lp-template9 :is(.admin-login-modal,.learning-modal,.reward-modal,.rp-overlay,.rw-overlay,.pl-overlay,.bp-manager-overlay,.bp-manager-action-overlay,.in-manager-overlay,.in-manager-action-overlay,.md-manager-overlay,.md-manager-action-overlay,.team-manager-overlay,.team-manager-action-overlay,.team-manager-image-overlay,.newsletter-overlay,.newsletter-action-overlay,.newsletter-image-overlay,.facebook-action-overlay,.cr-overlay){z-index:10050}
-body.lp-template9 :is(.admin-login-card,.learning-modal-box,.reward-modal-dialog,.modal-card){
-  border:1px solid rgba(9,112,112,.13)!important;border-radius:18px!important;background:#fff!important;box-shadow:0 30px 84px rgba(3,48,54,.28)!important;
-}
-body.lp-template9 .admin-login-modal[hidden],
-body.lp-template9 .learning-modal[hidden],
-body.lp-template9 .reward-modal[hidden]{display:none!important}
+
+
+
 body.lp-template9 .admin-mode-banner{z-index:20000!important;background:var(--t12-navy)!important;color:#fff!important;border:0!important}
 body.lp-template9 .admin-storage-fill{background:linear-gradient(90deg,var(--t12-lime),var(--t12-emerald))!important}
 

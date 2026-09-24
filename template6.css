@@ -444,35 +444,13 @@ body.lp-template6 .card,
 body.lp-template6 .panel{border-radius:4px;border-color:var(--t9-line);box-shadow:var(--t9-shadow-soft)}
 
 /* ---------- admin modal safety ---------- */
-body.lp-template6 .swal2-container{
-  position:fixed!important;inset:0!important;z-index:60000!important;width:100vw!important;height:100vh!important;max-width:none!important;margin:0!important;padding:10px!important
-}
-body.lp-template6 .swal2-popup{position:relative!important;z-index:60001!important;max-width:calc(100vw - 20px)!important;max-height:calc(100vh - 20px)!important}
-body.lp-template6 :is(
-  .cr-overlay,.rp-overlay,.rw-overlay,
-  .md-manager-overlay,.md-manager-action-overlay,
-  .in-manager-overlay,.in-manager-action-overlay,
-  .bp-manager-overlay,.bp-manager-action-overlay,
-  .pl-overlay,.team-manager-overlay,.team-manager-action-overlay,.team-manager-image-overlay,
-  .newsletter-action-overlay,.newsletter-image-overlay,.facebook-action-overlay,
-  .learning-modal,.admin-login-modal,.modalBackdrop
-){
-  position:fixed!important;inset:0!important;z-index:61000!important;width:100vw!important;height:100vh!important;max-width:none!important;margin:0!important;align-items:center!important;justify-content:center!important
-}
+
+
+
 /* Do not force hidden/static modals open. Their original CSS/JS controls display. */
-body.lp-template6 :is(.admin-login-modal,.learning-modal,.modalBackdrop)[hidden]{display:none!important}
-body.lp-template6 :is(
-  .cr-dialog,.rp-dialog,.rw-dialog,.rw-image-dialog,
-  .md-manager-dialog,.md-manager-image-dialog,
-  .in-manager-dialog,.in-manager-image-dialog,
-  .bp-manager-dialog,.bp-manager-image-dialog,.pl-dialog,
-  .team-manager-dialog,.team-manager-image-dialog,
-  .newsletter-action-dialog,.newsletter-image-dialog,
-  .boss-popup-dialog,.learning-modal-box,.edit-profile-modal-box,.modal-card
-){
-  position:relative!important;width:min(820px,94vw)!important;max-width:94vw!important;max-height:90vh!important;margin:auto!important;overflow:auto!important;border-radius:8px!important
-}
-body.lp-template6 :is(.cr-dialog,.rp-dialog,.rw-dialog,.md-manager-dialog,.in-manager-dialog,.bp-manager-dialog,.pl-dialog,.team-manager-dialog,.newsletter-action-dialog){border-top:5px solid var(--t9-aqua)!important}
+
+
+
 
 /* ---------- footer ---------- */
 body.lp-template6 footer,
